@@ -5,23 +5,45 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/trwalker/marvel-go/controllers"
+	"github.com/trwalker/marvel-go/middleware"
 	"net/http"
 )
 
 func main() {
-	router := mux.NewRouter()
+	apiHandler := initializeApiHandler()
 
+	startServer(apiHandler)
+}
+
+func initializeApiHandler() http.Handler {
+	apiRouter := mux.NewRouter()
+
+	registerRoutes(apiRouter)
+
+	return registerMiddleware(apiRouter)
+}
+
+func registerRoutes(apiRouter *mux.Router) {
 	characterListController := controllers.CharacterListController{}
-	router.HandleFunc("/v1/characters", characterListController.Get).Methods("GET")
+	apiRouter.HandleFunc("/v1/characters", characterListController.Get).Methods("GET")
 
 	characterController := controllers.CharacterController{}
-	router.HandleFunc("/v1/characters/{characterName}", characterController.Get).Methods("GET")
+	apiRouter.HandleFunc("/v1/characters/{characterName}", characterController.Get).Methods("GET")
+}
 
-	router.Headers("Content-Type", "application/json")
+func registerMiddleware(apiRouter *mux.Router) http.Handler {
+	var apiHandler http.Handler = apiRouter
 
-	handlers.CompressHandler(router)
+	apiHandler = handlers.CompressHandler(apiHandler)
+	apiHandler = handlers.CORS(handlers.AllowedOrigins([]string{"http://google.com"}))(apiHandler)
+	apiHandler = middleware.ResponseHeaders(apiHandler)
 
+	return apiHandler
+}
+
+func startServer(apiHandler http.Handler) {
 	fmt.Println("Starting Web Server...")
 	fmt.Println("URL:", "http://127.0.0.1:9000/")
-	http.ListenAndServe("127.0.0.1:9000", handlers.CORS()(router))
+
+	http.ListenAndServe("127.0.0.1:9000", apiHandler)
 }
