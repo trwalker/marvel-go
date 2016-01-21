@@ -20,7 +20,9 @@ func initializeApiHandler() http.Handler {
 
 	registerRoutes(apiRouter)
 
-	return registerMiddleware(apiRouter)
+	apiHandler := registerMiddleware(apiRouter)
+
+	return apiHandler
 }
 
 func registerRoutes(apiRouter *mux.Router) {
