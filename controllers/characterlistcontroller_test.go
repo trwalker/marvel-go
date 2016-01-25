@@ -12,7 +12,7 @@ type CharListCtrlTestContext struct {
 	Res        *httptest.ResponseRecorder
 }
 
-var charListControllerTestContext CharListCtrlTestContext = CharListCtrlTestContext{}
+var charListControllerTestContext *CharListCtrlTestContext = new(CharListCtrlTestContext)
 
 func (context *CharListCtrlTestContext) Setup() {
 	context.Controller = CharacterListController{}

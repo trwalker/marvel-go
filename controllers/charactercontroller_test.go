@@ -12,7 +12,7 @@ type CharCtrlTestContext struct {
 	Res        *httptest.ResponseRecorder
 }
 
-var charControllerTestContext CharCtrlTestContext = CharCtrlTestContext{}
+var charControllerTestContext *CharCtrlTestContext = new(CharCtrlTestContext)
 
 func (context *CharCtrlTestContext) Setup() {
 	context.Controller = CharacterController{}

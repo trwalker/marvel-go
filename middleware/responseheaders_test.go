@@ -13,7 +13,7 @@ type ResponseHeadersTestContext struct {
 	Body string
 }
 
-var responseHeadersTestContext ResponseHeadersTestContext = ResponseHeadersTestContext{}
+var responseHeadersTestContext *ResponseHeadersTestContext = new(ResponseHeadersTestContext)
 
 func (context *ResponseHeadersTestContext) Setup() {
 	context.Req = &http.Request{
