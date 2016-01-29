@@ -26,7 +26,7 @@ func initializeApiHandler() http.Handler {
 }
 
 func registerRoutes(apiRouter *mux.Router) {
-	characterListController := controllers.CharacterListController{}
+	characterListController := controllers.Constructor()
 	apiRouter.HandleFunc("/v1/characters", characterListController.Get).Methods("GET")
 
 	characterController := controllers.CharacterController{}

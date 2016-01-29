@@ -19,7 +19,7 @@ func (context *CharMapRepoTestContext) TearDown() {
 	context = nil
 }
 
-func TestCharacterMapRepoValidState(t *testing.T) {
+func TestCharacterMapRepoWhenValidState(t *testing.T) {
 	charMapRepoTestContext.Setup()
 	defer charMapRepoTestContext.TearDown()
 
@@ -29,13 +29,13 @@ func TestCharacterMapRepoValidState(t *testing.T) {
 	assertCharacterMapValue(t, characterMap)
 }
 
-func assertCharacterMapLength(t *testing.T, characterMap map[string]models.CharacterModel) {
+func assertCharacterMapLength(t *testing.T, characterMap map[string]*models.CharacterModel) {
 	if len(characterMap) != 11 {
 		t.Errorf("Character map should contain 11 characters, length: %v", len(characterMap))
 	}
 }
 
-func assertCharacterMapValue(t *testing.T, characterMap map[string]models.CharacterModel) {
+func assertCharacterMapValue(t *testing.T, characterMap map[string]*models.CharacterModel) {
 	_, found := characterMap["spider-man"]
 
 	if !found {
