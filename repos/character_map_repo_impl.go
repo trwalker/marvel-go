@@ -2,28 +2,39 @@ package repos
 
 import (
 	"github.com/trwalker/marvel-go/models"
+	"sync"
 )
 
+var CharacterMapRepoInstance CharacterMapRepo = constructor()
+
+var characters map[string]*models.CharacterModel
+
 type CharacterMapRepoImpl struct {
-	characters map[string]*models.CharacterModel
 }
 
 func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]*models.CharacterModel {
-	if len(characterMapRepo.characters) == 0 {
-		characterMapRepo.characters = buildCharacterMap()
+	if len(characters) == 0 {
+		lock := &sync.Mutex{}
+
+		lock.Lock()
+		defer lock.Unlock()
+
+		if len(characters) == 0 {
+			buildCharacterMap()
+		}
 	}
 
-	return characterMapRepo.characters
+	return characters
 }
 
-func Constructor() CharacterMapRepo {
+func constructor() CharacterMapRepo {
 	var characterMapRepo *CharacterMapRepoImpl = &CharacterMapRepoImpl{}
 
 	return characterMapRepo
 }
 
-func buildCharacterMap() map[string]*models.CharacterModel {
-	characterMap := make(map[string]*models.CharacterModel)
+func buildCharacterMap() {
+	characters = make(map[string]*models.CharacterModel)
 
 	spiderMan := &models.CharacterModel{
 		Id:    1009610,
@@ -31,7 +42,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/3/50/526548a343e4b.jpg",
 	}
 
-	characterMap[spiderMan.Name] = spiderMan
+	characters[spiderMan.Name] = spiderMan
 
 	hulk := &models.CharacterModel{
 		Id:    1009351,
@@ -39,7 +50,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/5/a0/538615ca33ab0.jpg",
 	}
 
-	characterMap[hulk.Name] = hulk
+	characters[hulk.Name] = hulk
 
 	captainAmerica := &models.CharacterModel{
 		Id:    1009220,
@@ -47,7 +58,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/3/50/537ba56d31087.jpg",
 	}
 
-	characterMap[captainAmerica.Name] = captainAmerica
+	characters[captainAmerica.Name] = captainAmerica
 
 	ironMan := &models.CharacterModel{
 		Id:    1009368,
@@ -55,7 +66,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55.jpg",
 	}
 
-	characterMap[ironMan.Name] = ironMan
+	characters[ironMan.Name] = ironMan
 
 	thor := &models.CharacterModel{
 		Id:    1009664,
@@ -63,7 +74,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/d/d0/5269657a74350.jpg",
 	}
 
-	characterMap[thor.Name] = thor
+	characters[thor.Name] = thor
 
 	wolverine := &models.CharacterModel{
 		Id:    1009718,
@@ -71,7 +82,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/2/60/537bcaef0f6cf.jpg",
 	}
 
-	characterMap[wolverine.Name] = wolverine
+	characters[wolverine.Name] = wolverine
 
 	storm := &models.CharacterModel{
 		Id:    1009629,
@@ -79,7 +90,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/6/40/526963dad214d.jpg",
 	}
 
-	characterMap[storm.Name] = storm
+	characters[storm.Name] = storm
 
 	jeanGrey := &models.CharacterModel{
 		Id:    1009496,
@@ -87,7 +98,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/f/30/4bc654cf9d0ac.jpg",
 	}
 
-	characterMap[jeanGrey.Name] = jeanGrey
+	characters[jeanGrey.Name] = jeanGrey
 
 	gambit := &models.CharacterModel{
 		Id:    1009313,
@@ -95,7 +106,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/a/40/52696aa8aee99.jpg",
 	}
 
-	characterMap[gambit.Name] = gambit
+	characters[gambit.Name] = gambit
 
 	cyclops := &models.CharacterModel{
 		Id:    1009257,
@@ -103,7 +114,7 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/6/70/526547e2d90ad.jpg",
 	}
 
-	characterMap[cyclops.Name] = cyclops
+	characters[cyclops.Name] = cyclops
 
 	beast := &models.CharacterModel{
 		Id:    1009175,
@@ -111,7 +122,5 @@ func buildCharacterMap() map[string]*models.CharacterModel {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/2/80/511a79a0451a3.jpg",
 	}
 
-	characterMap[beast.Name] = beast
-
-	return characterMap
+	characters[beast.Name] = beast
 }

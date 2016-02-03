@@ -5,18 +5,17 @@ import (
 	"testing"
 )
 
+var charMapRepoTestContext *CharMapRepoTestContext = new(CharMapRepoTestContext)
+
 type CharMapRepoTestContext struct {
 	Repo CharacterMapRepo
 }
 
-var charMapRepoTestContext *CharMapRepoTestContext = new(CharMapRepoTestContext)
-
 func (context *CharMapRepoTestContext) Setup() {
-	context.Repo = Constructor()
+	context.Repo = CharacterMapRepoInstance
 }
 
 func (context *CharMapRepoTestContext) TearDown() {
-	context = nil
 }
 
 func TestCharacterMapRepoWhenValidState(t *testing.T) {

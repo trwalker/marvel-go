@@ -36,12 +36,16 @@ func (context *ResponseHeadersTestContext) SendApiRequest() {
 	})).ServeHTTP(context.Res, context.Req)
 }
 
-func TestResponseHeadersHandlerContentType(t *testing.T) {
+func TestResponseHeadersHandlerValidState(t *testing.T) {
 	responseHeadersTestContext.Setup()
 	defer responseHeadersTestContext.TearDown()
 
 	responseHeadersTestContext.SendApiRequest()
 
+	assertContentType(t, responseHeadersTestContext.Res)
+}
+
+func assertContentType(t *testing.T, res *httptest.ResponseRecorder) {
 	contentType := responseHeadersTestContext.Res.HeaderMap.Get("Content-Type")
 	if contentType != "application/json" {
 		t.Errorf("Wrong \"Content-Type\" header: %s", contentType)
