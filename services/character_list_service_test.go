@@ -21,10 +21,17 @@ func (charMapRepoMock *CharacterMapRepoMock) GetCharacterMap() map[string]*model
 
 func (context *CharListServiceTestContext) Setup() {
 	charListServiceTestContext.CharacterMap = make(map[string]*models.CharacterModel)
+
 	charListServiceTestContext.CharacterMap["spider-man"] = &models.CharacterModel{
-		Id:    1009610,
+		Id:    1,
 		Name:  "spider-man",
-		Image: "http://i.annihil.us/u/prod/marvel/i/mg/3/50/526548a343e4b.jpg",
+		Image: "http://i.annihil.us/u/prod/marvel/bar.jpg",
+	}
+
+	charListServiceTestContext.CharacterMap["hulk"] = &models.CharacterModel{
+		Id:    2,
+		Name:  "hulk",
+		Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
 	}
 
 	charListServiceTestContext.Service = &CharacterListServiceImpl{
@@ -35,6 +42,17 @@ func (context *CharListServiceTestContext) Setup() {
 func (context *CharListServiceTestContext) TearDown() {
 }
 
+func TestCharacterListServiceInvalidState(t *testing.T) {
+	charListServiceTestContext.Setup()
+	defer charListServiceTestContext.TearDown()
+
+	charListServiceTestContext.CharacterMap = nil
+
+	characterList := charListServiceTestContext.Service.GetCharacterList()
+
+	assertCharacterListIsEmpty(t, characterList)
+}
+
 func TestCharacterListServiceValidState(t *testing.T) {
 	charListServiceTestContext.Setup()
 	defer charListServiceTestContext.TearDown()
@@ -43,6 +61,12 @@ func TestCharacterListServiceValidState(t *testing.T) {
 
 	assertCharacterListLength(t, characterList)
 	assertCharacterListContainsMapCharacters(t, characterList)
+}
+
+func assertCharacterListIsEmpty(t *testing.T, characterList models.CharacterListModel) {
+	if len(characterList.Characters) != 0 {
+		t.Error("Character list should be empty")
+	}
 }
 
 func assertCharacterListLength(t *testing.T, characterList models.CharacterListModel) {
