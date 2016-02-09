@@ -1,43 +1,33 @@
 package repos
 
 import (
-	"github.com/trwalker/marvel-go/models"
+	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
 
-var charMapRepoTestContext *CharMapRepoTestContext = new(CharMapRepoTestContext)
+func TestCharacterMapRepo(t *testing.T) {
+	Convey("CharacterMapRepo Tests", t, func() {
 
-type CharMapRepoTestContext struct {
-	Repo CharacterMapRepo
-}
+		var charMapRepo CharacterMapRepo = CharacterMapRepoInstance
 
-func (context *CharMapRepoTestContext) Setup() {
-	context.Repo = CharacterMapRepoInstance
-}
+		Convey("GetCharacterMap Method", func() {
 
-func (context *CharMapRepoTestContext) TearDown() {
-}
+			Convey("When valid state", func() {
 
-func TestCharacterMapRepoWhenValidState(t *testing.T) {
-	charMapRepoTestContext.Setup()
-	defer charMapRepoTestContext.TearDown()
+				characterMap := charMapRepo.GetCharacterMap()
 
-	characterMap := charMapRepoTestContext.Repo.GetCharacterMap()
+				Convey("Should contain 11 Characters", func() {
+					So(len(characterMap), ShouldEqual, 11)
+				})
 
-	assertCharacterMapLength(t, characterMap)
-	assertCharacterMapValue(t, characterMap)
-}
+				Convey("Should contain \"spider-man\"", func() {
+					_, found := characterMap["spider-man"]
+					So(found, ShouldBeTrue)
+				})
 
-func assertCharacterMapLength(t *testing.T, characterMap map[string]*models.CharacterModel) {
-	if len(characterMap) != 11 {
-		t.Errorf("Character map should contain 11 characters, length: %v", len(characterMap))
-	}
-}
+			})
 
-func assertCharacterMapValue(t *testing.T, characterMap map[string]*models.CharacterModel) {
-	_, found := characterMap["spider-man"]
+		})
 
-	if !found {
-		t.Error("Character map should contain \"spider-man\"")
-	}
+	})
 }
