@@ -8,9 +8,7 @@ import (
 
 var CharacterListServiceInstance CharacterListService = constructor()
 
-var characterList models.CharacterListModel = models.CharacterListModel{
-	Characters: make([]*models.CharacterModel, 0),
-}
+var characterList models.CharacterListModel
 
 type CharacterListServiceImpl struct {
 	CharacterMapRepoInterface repos.CharacterMapRepo
@@ -19,6 +17,10 @@ type CharacterListServiceImpl struct {
 func constructor() CharacterListService {
 	var characterListService *CharacterListServiceImpl = &CharacterListServiceImpl{
 		CharacterMapRepoInterface: repos.CharacterMapRepoInstance,
+	}
+
+	characterList = models.CharacterListModel{
+		Characters: make([]*models.CharacterModel, 0),
 	}
 
 	return characterListService

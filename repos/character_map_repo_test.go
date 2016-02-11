@@ -5,22 +5,26 @@ import (
 	"testing"
 )
 
-func TestCharacterMapRepo(t *testing.T) {
+var characterMapRepo CharacterMapRepo
+
+func TestCharacterMapRepoSpec(t *testing.T) {
+
 	Convey("CharacterMapRepo Tests", t, func() {
 
-		var charMapRepo CharacterMapRepo = CharacterMapRepoInstance
+		CharacterMapRepoInstance = constructor()
+		characterMapRepo = CharacterMapRepoInstance
 
-		Convey("GetCharacterMap Method", func() {
+		Convey("GetCharacterMap Function", func() {
 
 			Convey("When valid state", func() {
 
-				characterMap := charMapRepo.GetCharacterMap()
+				characterMap := characterMapRepo.GetCharacterMap()
 
-				Convey("Should contain 11 Characters", func() {
+				Convey("Should contain 11 characters", func() {
 					So(len(characterMap), ShouldEqual, 11)
 				})
 
-				Convey("Should contain \"spider-man\"", func() {
+				Convey("Should contain \"spider-man\" character", func() {
 					_, found := characterMap["spider-man"]
 					So(found, ShouldBeTrue)
 				})
@@ -30,4 +34,5 @@ func TestCharacterMapRepo(t *testing.T) {
 		})
 
 	})
+
 }

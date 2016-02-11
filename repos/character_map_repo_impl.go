@@ -30,12 +30,12 @@ func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]*mode
 func constructor() CharacterMapRepo {
 	var characterMapRepo *CharacterMapRepoImpl = &CharacterMapRepoImpl{}
 
+	characters = make(map[string]*models.CharacterModel)
+
 	return characterMapRepo
 }
 
 func buildCharacterMap() {
-	characters = make(map[string]*models.CharacterModel)
-
 	spiderMan := &models.CharacterModel{
 		Id:    1009610,
 		Name:  "spider-man",
