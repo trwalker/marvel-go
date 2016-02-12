@@ -1,43 +1,91 @@
 package controllers
 
 import (
+	"encoding/json"
+	. "github.com/smartystreets/goconvey/convey"
 	"github.com/trwalker/marvel-go/models"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-type CharListCtrlTestContext struct {
-	Controller CharacterListController
-	Req        *http.Request
-	Res        *httptest.ResponseRecorder
+var characterListController CharacterListController
+
+var characterList *models.CharacterListModel
+
+type CharacterListServiceMock struct {
 }
 
-type CharListServiceMock struct {
+func (characterListService *CharacterListServiceMock) GetCharacterList() *models.CharacterListModel {
+	return characterList
 }
 
-func (characterListService *CharListServiceMock) GetCharacterList() models.CharacterListModel {
-	return models.CharacterListModel{}
-}
+func TestCharacterListControllerSpec(t *testing.T) {
+	Convey("CharacterListController Tests", t, func() {
 
-var charListControllerTestContext *CharListCtrlTestContext = new(CharListCtrlTestContext)
+		CharacterListControllerInstance = constructor()
 
-func (context *CharListCtrlTestContext) Setup() {
-	context.Controller = CharacterListController{
-		CharacterListServiceInterface: &CharListServiceMock{},
-	}
+		characterList = &models.CharacterListModel{}
+		characterList.Characters = append(characterList.Characters, &models.CharacterModel{
+			Name:  "spider-man",
+			Id:    1234,
+			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
+		})
 
-	context.Req = &http.Request{}
-	context.Res = httptest.NewRecorder()
-}
+		characterListController = CharacterListController{
+			CharacterListServiceInterface: &CharacterListServiceMock{},
+		}
 
-func (context *CharListCtrlTestContext) TearDown() {
-	context = nil
-}
+		req := &http.Request{}
+		res := httptest.NewRecorder()
 
-func TestCharacterListControllerSuccess(t *testing.T) {
-	charListControllerTestContext.Setup()
-	defer charListControllerTestContext.TearDown()
+		Convey("Get Function", func() {
 
-	charListControllerTestContext.Controller.Get(charListControllerTestContext.Res, charListControllerTestContext.Req)
+			Convey("When valid state", func() {
+
+				characterListController.Get(res, req)
+				model := &models.CharacterListModel{}
+				json.Unmarshal([]byte(res.Body.String()), model)
+
+				Convey("Should write character list JSON with 1 item", func() {
+					So(len(model.Characters), ShouldEqual, 1)
+				})
+
+				Convey("Should write character list JSON with spiderman", func() {
+					So(model.Characters[0].Name, ShouldEqual, "spider-man")
+				})
+			})
+
+			Convey("When invalid state", func() {
+
+				Convey("When characterListModel is nil", func() {
+
+					characterList = nil
+					characterListController.Get(res, req)
+
+					Convey("Should return empty character list", func() {
+						So(res.Code, ShouldEqual, 404)
+					})
+
+				})
+
+				Convey("When characterListModel is empty", func() {
+
+					characterList = &models.CharacterListModel{}
+					characterListController.Get(res, req)
+					model := &models.CharacterListModel{}
+					json.Unmarshal([]byte(res.Body.String()), model)
+
+					Convey("Should return empty character list", func() {
+						So(len(model.Characters), ShouldEqual, 0)
+					})
+
+				})
+
+			})
+
+		})
+
+	})
+
 }

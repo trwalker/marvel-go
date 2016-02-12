@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/trwalker/marvel-go/models"
 	"testing"
@@ -41,8 +40,6 @@ func TestCharacterListServiceSpec(t *testing.T) {
 		characterListService = &CharacterListServiceImpl{
 			CharacterMapRepoInterface: &CharacterMapRepoMock{},
 		}
-
-		fmt.Println("Setup mocks")
 
 		Convey("GetCharacterList Function", func() {
 

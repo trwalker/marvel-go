@@ -5,5 +5,5 @@ import (
 )
 
 type CharacterListService interface {
-	GetCharacterList() models.CharacterListModel
+	GetCharacterList() *models.CharacterListModel
 }

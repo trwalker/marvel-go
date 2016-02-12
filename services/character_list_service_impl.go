@@ -8,7 +8,7 @@ import (
 
 var CharacterListServiceInstance CharacterListService = constructor()
 
-var characterList models.CharacterListModel
+var characterList *models.CharacterListModel
 
 type CharacterListServiceImpl struct {
 	CharacterMapRepoInterface repos.CharacterMapRepo
@@ -19,14 +19,14 @@ func constructor() CharacterListService {
 		CharacterMapRepoInterface: repos.CharacterMapRepoInstance,
 	}
 
-	characterList = models.CharacterListModel{
+	characterList = &models.CharacterListModel{
 		Characters: make([]*models.CharacterModel, 0),
 	}
 
 	return characterListService
 }
 
-func (characterListService *CharacterListServiceImpl) GetCharacterList() models.CharacterListModel {
+func (characterListService *CharacterListServiceImpl) GetCharacterList() *models.CharacterListModel {
 	if len(characterList.Characters) == 0 {
 		lock := &sync.Mutex{}
 

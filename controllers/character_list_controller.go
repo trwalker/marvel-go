@@ -21,5 +21,9 @@ func constructor() *CharacterListController {
 func (controller *CharacterListController) Get(res http.ResponseWriter, req *http.Request) {
 	characterListModel := controller.CharacterListServiceInterface.GetCharacterList()
 
-	json.NewEncoder(res).Encode(characterListModel)
+	if characterListModel != nil {
+		json.NewEncoder(res).Encode(characterListModel)
+	} else {
+		http.NotFound(res, req)
+	}
 }
