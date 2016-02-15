@@ -6,13 +6,13 @@ import (
 	"net/http"
 )
 
-var CharacterListControllerInstance *CharacterListController = constructor()
+var CharacterListControllerInstance *CharacterListController = initCharacterListController()
 
 type CharacterListController struct {
 	CharacterListServiceInterface services.CharacterListService
 }
 
-func constructor() *CharacterListController {
+func initCharacterListController() *CharacterListController {
 	return &CharacterListController{
 		CharacterListServiceInterface: services.CharacterListServiceInstance,
 	}

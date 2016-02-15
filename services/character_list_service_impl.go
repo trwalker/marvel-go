@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-var CharacterListServiceInstance CharacterListService = constructor()
+var CharacterListServiceInstance CharacterListService = initCharacterListService()
 
 var characterList *models.CharacterListModel
 
@@ -14,7 +14,7 @@ type CharacterListServiceImpl struct {
 	CharacterMapRepoInterface repos.CharacterMapRepo
 }
 
-func constructor() CharacterListService {
+func initCharacterListService() CharacterListService {
 	var characterListService *CharacterListServiceImpl = &CharacterListServiceImpl{
 		CharacterMapRepoInterface: repos.CharacterMapRepoInstance,
 	}

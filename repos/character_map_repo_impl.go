@@ -5,11 +5,19 @@ import (
 	"sync"
 )
 
-var CharacterMapRepoInstance CharacterMapRepo = constructor()
+var CharacterMapRepoInstance CharacterMapRepo = initCharacterMapRepo()
 
 var characters map[string]*models.CharacterModel
 
 type CharacterMapRepoImpl struct {
+}
+
+func initCharacterMapRepo() CharacterMapRepo {
+	var characterMapRepo *CharacterMapRepoImpl = &CharacterMapRepoImpl{}
+
+	characters = make(map[string]*models.CharacterModel)
+
+	return characterMapRepo
 }
 
 func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]*models.CharacterModel {
@@ -25,14 +33,6 @@ func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]*mode
 	}
 
 	return characters
-}
-
-func constructor() CharacterMapRepo {
-	var characterMapRepo *CharacterMapRepoImpl = &CharacterMapRepoImpl{}
-
-	characters = make(map[string]*models.CharacterModel)
-
-	return characterMapRepo
 }
 
 func buildCharacterMap() {

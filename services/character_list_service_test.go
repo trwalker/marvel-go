@@ -21,7 +21,7 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		CharacterListServiceInstance = constructor()
+		CharacterListServiceInstance = initCharacterListService()
 
 		characterMap = make(map[string]*models.CharacterModel)
 

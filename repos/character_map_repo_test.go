@@ -11,7 +11,7 @@ func TestCharacterMapRepoSpec(t *testing.T) {
 
 	Convey("CharacterMapRepo Tests", t, func() {
 
-		CharacterMapRepoInstance = constructor()
+		CharacterMapRepoInstance = initCharacterMapRepo()
 		characterMapRepo = CharacterMapRepoInstance
 
 		Convey("GetCharacterMap Function", func() {

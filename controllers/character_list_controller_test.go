@@ -23,7 +23,7 @@ func (characterListService *CharacterListServiceMock) GetCharacterList() *models
 func TestCharacterListControllerSpec(t *testing.T) {
 	Convey("CharacterListController Tests", t, func() {
 
-		CharacterListControllerInstance = constructor()
+		CharacterListControllerInstance = initCharacterListController()
 
 		characterList = &models.CharacterListModel{}
 		characterList.Characters = append(characterList.Characters, &models.CharacterModel{
