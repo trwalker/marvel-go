@@ -15,7 +15,6 @@ type ApiKeyRepoImpl struct {
 }
 
 func initApiKeyRepo() ApiKeyRepo {
-
 	apiKeyConfigModel = nil
 
 	return &ApiKeyRepoImpl{}

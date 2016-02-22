@@ -2,44 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/trwalker/marvel-go/controllers"
-	"github.com/trwalker/marvel-go/middleware"
+	"github.com/trwalker/marvel-go/config"
 	"net/http"
 )
 
 func main() {
-	apiHandler := initializeApiHandler()
+	apiHandler := config.BuildApiHandler()
 
 	startServer(apiHandler)
-}
-
-func initializeApiHandler() http.Handler {
-	apiRouter := mux.NewRouter()
-
-	registerRoutes(apiRouter)
-
-	apiHandler := registerMiddleware(apiRouter)
-
-	return apiHandler
-}
-
-func registerRoutes(apiRouter *mux.Router) {
-	apiRouter.HandleFunc("/v1/characters", controllers.CharacterListControllerInstance.Get).Methods("GET")
-
-	characterController := controllers.CharacterController{}
-	apiRouter.HandleFunc("/v1/characters/{characterName}", characterController.Get).Methods("GET")
-}
-
-func registerMiddleware(apiRouter *mux.Router) http.Handler {
-	var apiHandler http.Handler = apiRouter
-
-	apiHandler = handlers.CompressHandler(apiHandler)
-	apiHandler = handlers.CORS(handlers.AllowedOrigins([]string{"http://google.com"}))(apiHandler)
-	apiHandler = middleware.ResponseHeaders(apiHandler)
-
-	return apiHandler
 }
 
 func startServer(apiHandler http.Handler) {
