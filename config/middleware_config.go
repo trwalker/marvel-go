@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func RegisterMiddleware(apiRouter *mux.Router) http.Handler {
+func registerMiddleware(apiRouter *mux.Router) http.Handler {
 	var apiHandler http.Handler = apiRouter
 
 	apiHandler = handlers.CompressHandler(apiHandler)

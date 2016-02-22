@@ -8,9 +8,9 @@ import (
 func BuildApiHandler() http.Handler {
 	apiRouter := mux.NewRouter()
 
-	RegisterRoutes(apiRouter)
+	registerRoutes(apiRouter)
 
-	httpHandler := RegisterMiddleware(apiRouter)
+	httpHandler := registerMiddleware(apiRouter)
 
 	return httpHandler
 }
