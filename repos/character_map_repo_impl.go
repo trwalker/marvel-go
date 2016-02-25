@@ -5,44 +5,35 @@ import (
 	"sync"
 )
 
-var CharacterMapRepoInstance CharacterMapRepo = initCharacterMapRepo()
-
-var characters map[string]*models.CharacterModel
+var CharacterMapRepoInstance CharacterMapRepo = &CharacterMapRepoImpl{characterMap: make(map[string]*models.CharacterModel)}
 
 type CharacterMapRepoImpl struct {
-}
-
-func initCharacterMapRepo() CharacterMapRepo {
-	var characterMapRepo *CharacterMapRepoImpl = &CharacterMapRepoImpl{}
-
-	characters = make(map[string]*models.CharacterModel)
-
-	return characterMapRepo
+	characterMap map[string]*models.CharacterModel
 }
 
 func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]*models.CharacterModel {
-	if len(characters) == 0 {
+	if len(characterMapRepo.characterMap) == 0 {
 		lock := &sync.Mutex{}
 
 		lock.Lock()
 		defer lock.Unlock()
 
-		if len(characters) == 0 {
-			buildCharacterMap()
+		if len(characterMapRepo.characterMap) == 0 {
+			buildCharacterMap(characterMapRepo)
 		}
 	}
 
-	return characters
+	return characterMapRepo.characterMap
 }
 
-func buildCharacterMap() {
+func buildCharacterMap(characterMapRepo *CharacterMapRepoImpl) {
 	spiderMan := &models.CharacterModel{
 		Id:    1009610,
 		Name:  "spider-man",
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/3/50/526548a343e4b.jpg",
 	}
 
-	characters[spiderMan.Name] = spiderMan
+	characterMapRepo.characterMap[spiderMan.Name] = spiderMan
 
 	hulk := &models.CharacterModel{
 		Id:    1009351,
@@ -50,7 +41,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/5/a0/538615ca33ab0.jpg",
 	}
 
-	characters[hulk.Name] = hulk
+	characterMapRepo.characterMap[hulk.Name] = hulk
 
 	captainAmerica := &models.CharacterModel{
 		Id:    1009220,
@@ -58,7 +49,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/3/50/537ba56d31087.jpg",
 	}
 
-	characters[captainAmerica.Name] = captainAmerica
+	characterMapRepo.characterMap[captainAmerica.Name] = captainAmerica
 
 	ironMan := &models.CharacterModel{
 		Id:    1009368,
@@ -66,7 +57,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/9/c0/527bb7b37ff55.jpg",
 	}
 
-	characters[ironMan.Name] = ironMan
+	characterMapRepo.characterMap[ironMan.Name] = ironMan
 
 	thor := &models.CharacterModel{
 		Id:    1009664,
@@ -74,7 +65,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/d/d0/5269657a74350.jpg",
 	}
 
-	characters[thor.Name] = thor
+	characterMapRepo.characterMap[thor.Name] = thor
 
 	wolverine := &models.CharacterModel{
 		Id:    1009718,
@@ -82,7 +73,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/2/60/537bcaef0f6cf.jpg",
 	}
 
-	characters[wolverine.Name] = wolverine
+	characterMapRepo.characterMap[wolverine.Name] = wolverine
 
 	storm := &models.CharacterModel{
 		Id:    1009629,
@@ -90,7 +81,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/6/40/526963dad214d.jpg",
 	}
 
-	characters[storm.Name] = storm
+	characterMapRepo.characterMap[storm.Name] = storm
 
 	jeanGrey := &models.CharacterModel{
 		Id:    1009496,
@@ -98,7 +89,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/f/30/4bc654cf9d0ac.jpg",
 	}
 
-	characters[jeanGrey.Name] = jeanGrey
+	characterMapRepo.characterMap[jeanGrey.Name] = jeanGrey
 
 	gambit := &models.CharacterModel{
 		Id:    1009313,
@@ -106,7 +97,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/a/40/52696aa8aee99.jpg",
 	}
 
-	characters[gambit.Name] = gambit
+	characterMapRepo.characterMap[gambit.Name] = gambit
 
 	cyclops := &models.CharacterModel{
 		Id:    1009257,
@@ -114,7 +105,7 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/6/70/526547e2d90ad.jpg",
 	}
 
-	characters[cyclops.Name] = cyclops
+	characterMapRepo.characterMap[cyclops.Name] = cyclops
 
 	beast := &models.CharacterModel{
 		Id:    1009175,
@@ -122,5 +113,5 @@ func buildCharacterMap() {
 		Image: "http://i.annihil.us/u/prod/marvel/i/mg/2/80/511a79a0451a3.jpg",
 	}
 
-	characters[beast.Name] = beast
+	characterMapRepo.characterMap[beast.Name] = beast
 }

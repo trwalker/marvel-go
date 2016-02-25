@@ -6,16 +6,12 @@ import (
 	"net/http"
 )
 
-var CharacterListControllerInstance CharacterListController = initCharacterListController()
+var CharacterListControllerInstance CharacterListController = &CharacterListControllerImpl{
+	CharacterListServiceInterface: services.CharacterListServiceInstance,
+}
 
 type CharacterListControllerImpl struct {
 	CharacterListServiceInterface services.CharacterListService
-}
-
-func initCharacterListController() CharacterListController {
-	return &CharacterListControllerImpl{
-		CharacterListServiceInterface: services.CharacterListServiceInstance,
-	}
 }
 
 func (controller *CharacterListControllerImpl) Get(res http.ResponseWriter, req *http.Request) {

@@ -10,7 +10,7 @@ var apiKeyRepo ApiKeyRepo
 func TestApiKeyRepoSpec(t *testing.T) {
 	Convey("ApiKeyRepo Tests", t, func() {
 
-		apiKeyRepo = initApiKeyRepo()
+		apiKeyRepo = &ApiKeyRepoImpl{apiKeyConfigModel: nil}
 
 		Convey("GetApiKeyConfig Function", func() {
 

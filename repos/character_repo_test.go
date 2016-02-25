@@ -11,7 +11,7 @@ func TestCharacterRepoSpec(t *testing.T) {
 
 	Convey("CharacterRepo Tests", t, func() {
 
-		characterRepo = initCharacterRepo()
+		characterRepo = &CharacterRepoImpl{}
 
 		Convey("GetCharacter Function", func() {
 

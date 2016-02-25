@@ -21,8 +21,6 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		CharacterListServiceInstance = initCharacterListService()
-
 		characterMap = make(map[string]*models.CharacterModel)
 
 		characterMap["spider-man"] = &models.CharacterModel{
@@ -39,6 +37,9 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 		characterListService = &CharacterListServiceImpl{
 			CharacterMapRepoInterface: &CharacterMapRepoMock{},
+			characterList: &models.CharacterListModel{
+				Characters: make([]*models.CharacterModel, 0),
+			},
 		}
 
 		Convey("GetCharacterList Function", func() {

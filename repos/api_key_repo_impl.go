@@ -7,28 +7,21 @@ import (
 	"sync"
 )
 
-var ApiKeyRepoInstance ApiKeyRepo = initApiKeyRepo()
-
-var apiKeyConfigModel *models.ApiKeyConfigModel
+var ApiKeyRepoInstance ApiKeyRepo = &ApiKeyRepoImpl{}
 
 type ApiKeyRepoImpl struct {
-}
-
-func initApiKeyRepo() ApiKeyRepo {
-	apiKeyConfigModel = nil
-
-	return &ApiKeyRepoImpl{}
+	apiKeyConfigModel *models.ApiKeyConfigModel
 }
 
 func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *models.ApiKeyConfigModel {
 
-	if apiKeyConfigModel == nil {
+	if apiKeyRepo.apiKeyConfigModel == nil {
 		lock := &sync.Mutex{}
 
 		lock.Lock()
 		defer lock.Unlock()
 
-		if apiKeyConfigModel == nil {
+		if apiKeyRepo.apiKeyConfigModel == nil {
 			rawJson, fileErr := ioutil.ReadFile("../config/apikey_config.json")
 
 			if fileErr != nil {
@@ -40,11 +33,11 @@ func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *models.ApiKeyConfigModel {
 				if jsonErr != nil {
 					// TODO: error logging
 				} else {
-					apiKeyConfigModel = &model
+					apiKeyRepo.apiKeyConfigModel = &model
 				}
 			}
 		}
 	}
 
-	return apiKeyConfigModel
+	return apiKeyRepo.apiKeyConfigModel
 }

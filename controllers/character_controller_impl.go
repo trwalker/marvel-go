@@ -7,13 +7,9 @@ import (
 	"net/http"
 )
 
-var CharacterControllerInstance CharacterController = initCharacterController()
+var CharacterControllerInstance CharacterController = &CharacterControllerImpl{}
 
 type CharacterControllerImpl struct {
-}
-
-func initCharacterController() CharacterController {
-	return &CharacterControllerImpl{}
 }
 
 func (controller *CharacterControllerImpl) Get(res http.ResponseWriter, req *http.Request) {

@@ -4,17 +4,11 @@ import (
 	"github.com/trwalker/marvel-go/models"
 )
 
-var CharacterRepoInstance CharacterRepo = initCharacterRepo()
+var CharacterRepoInstance CharacterRepo = &CharacterRepoImpl{}
 
-var characterDetailsMap map[int]models.CharacterDetailsModel
+var characterDetailsMap map[int]models.CharacterDetailsModel = make(map[int]models.CharacterDetailsModel)
 
 type CharacterRepoImpl struct {
-}
-
-func initCharacterRepo() CharacterRepo {
-	characterDetailsMap = make(map[int]models.CharacterDetailsModel)
-
-	return &CharacterRepoImpl{}
 }
 
 func (characterRepo *CharacterRepoImpl) GetCharacter(id int) *models.CharacterDetailsModel {

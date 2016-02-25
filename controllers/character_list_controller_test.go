@@ -23,8 +23,6 @@ func (characterListService *CharacterListServiceMock) GetCharacterList() *models
 func TestCharacterListControllerSpec(t *testing.T) {
 	Convey("CharacterListController Tests", t, func() {
 
-		CharacterListControllerInstance = initCharacterListController()
-
 		characterList = &models.CharacterListModel{}
 		characterList.Characters = append(characterList.Characters, &models.CharacterModel{
 			Name:  "spider-man",
@@ -32,7 +30,7 @@ func TestCharacterListControllerSpec(t *testing.T) {
 			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
 		})
 
-		characterListController = CharacterListController{
+		characterListController = &CharacterListControllerImpl{
 			CharacterListServiceInterface: &CharacterListServiceMock{},
 		}
 

@@ -6,39 +6,31 @@ import (
 	"sync"
 )
 
-var CharacterListServiceInstance CharacterListService = initCharacterListService()
-
-var characterList *models.CharacterListModel
+var CharacterListServiceInstance CharacterListService = &CharacterListServiceImpl{
+	CharacterMapRepoInterface: repos.CharacterMapRepoInstance,
+	characterList: &models.CharacterListModel{
+		Characters: make([]*models.CharacterModel, 0),
+	},
+}
 
 type CharacterListServiceImpl struct {
 	CharacterMapRepoInterface repos.CharacterMapRepo
-}
-
-func initCharacterListService() CharacterListService {
-	var characterListService *CharacterListServiceImpl = &CharacterListServiceImpl{
-		CharacterMapRepoInterface: repos.CharacterMapRepoInstance,
-	}
-
-	characterList = &models.CharacterListModel{
-		Characters: make([]*models.CharacterModel, 0),
-	}
-
-	return characterListService
+	characterList             *models.CharacterListModel
 }
 
 func (characterListService *CharacterListServiceImpl) GetCharacterList() *models.CharacterListModel {
-	if len(characterList.Characters) == 0 {
+	if len(characterListService.characterList.Characters) == 0 {
 		lock := &sync.Mutex{}
 
 		lock.Lock()
 		defer lock.Unlock()
 
-		if len(characterList.Characters) == 0 {
+		if len(characterListService.characterList.Characters) == 0 {
 			buildCharacterList(characterListService)
 		}
 	}
 
-	return characterList
+	return characterListService.characterList
 }
 
 func buildCharacterList(characterListService *CharacterListServiceImpl) {
@@ -50,5 +42,5 @@ func buildCharacterList(characterListService *CharacterListServiceImpl) {
 		characters = append(characters, value)
 	}
 
-	characterList.Characters = characters
+	characterListService.characterList.Characters = characters
 }
