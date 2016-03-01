@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/trwalker/marvel-go/models"
+	"github.com/trwalker/marvel-go/characters"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,20 +11,20 @@ import (
 
 var characterListController CharacterListController
 
-var characterList *models.CharacterListModel
+var characterList *characters.CharacterListModel
 
 type CharacterListServiceMock struct {
 }
 
-func (characterListService *CharacterListServiceMock) GetCharacterList() *models.CharacterListModel {
+func (characterListService *CharacterListServiceMock) GetCharacterList() *characters.CharacterListModel {
 	return characterList
 }
 
 func TestCharacterListControllerSpec(t *testing.T) {
 	Convey("CharacterListController Tests", t, func() {
 
-		characterList = &models.CharacterListModel{}
-		characterList.Characters = append(characterList.Characters, &models.CharacterModel{
+		characterList = &characters.CharacterListModel{}
+		characterList.Characters = append(characterList.Characters, &characters.CharacterModel{
 			Name:  "spider-man",
 			Id:    1234,
 			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
@@ -42,7 +42,7 @@ func TestCharacterListControllerSpec(t *testing.T) {
 			Convey("When valid state", func() {
 
 				characterListController.Get(res, req)
-				model := &models.CharacterListModel{}
+				model := &characters.CharacterListModel{}
 				json.Unmarshal([]byte(res.Body.String()), model)
 
 				Convey("Should write character list JSON with 1 item", func() {
@@ -69,9 +69,9 @@ func TestCharacterListControllerSpec(t *testing.T) {
 
 				Convey("When characterListModel is empty", func() {
 
-					characterList = &models.CharacterListModel{}
+					characterList = &characters.CharacterListModel{}
 					characterListController.Get(res, req)
-					model := &models.CharacterListModel{}
+					model := &characters.CharacterListModel{}
 					json.Unmarshal([]byte(res.Body.String()), model)
 
 					Convey("Should return empty character list", func() {

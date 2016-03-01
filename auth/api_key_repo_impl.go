@@ -1,8 +1,7 @@
-package repos
+package auth
 
 import (
 	"encoding/json"
-	"github.com/trwalker/marvel-go/models"
 	"io/ioutil"
 	"sync"
 )
@@ -10,10 +9,10 @@ import (
 var ApiKeyRepoInstance ApiKeyRepo = &ApiKeyRepoImpl{}
 
 type ApiKeyRepoImpl struct {
-	apiKeyConfigModel *models.ApiKeyConfigModel
+	apiKeyConfigModel *ApiKeyConfigModel
 }
 
-func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *models.ApiKeyConfigModel {
+func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *ApiKeyConfigModel {
 
 	if apiKeyRepo.apiKeyConfigModel == nil {
 		lock := &sync.Mutex{}
@@ -22,12 +21,12 @@ func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *models.ApiKeyConfigModel {
 		defer lock.Unlock()
 
 		if apiKeyRepo.apiKeyConfigModel == nil {
-			rawJson, fileErr := ioutil.ReadFile("../config/api_key_config.json")
+			rawJson, fileErr := ioutil.ReadFile("../config/auth/api_key_config.json")
 
 			if fileErr != nil {
 				// TODO: error logging
 			} else {
-				var model models.ApiKeyConfigModel
+				var model ApiKeyConfigModel
 				jsonErr := json.Unmarshal(rawJson, &model)
 
 				if jsonErr != nil {

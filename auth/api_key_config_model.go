@@ -1,4 +1,4 @@
-package models
+package auth
 
 type ApiKeyConfigModel struct {
 	PublicKey  string `json:"publicKey"`

@@ -1,4 +1,4 @@
-package repos
+package characters
 
 import (
 	. "github.com/smartystreets/goconvey/convey"

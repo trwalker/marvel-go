@@ -1,19 +1,18 @@
-package services
+package characters
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/trwalker/marvel-go/models"
 	"testing"
 )
 
 var characterListService CharacterListService
 
-var characterMap map[string]*models.CharacterModel
+var characterMap map[string]*CharacterModel
 
 type CharacterMapRepoMock struct {
 }
 
-func (charMapRepoMock *CharacterMapRepoMock) GetCharacterMap() map[string]*models.CharacterModel {
+func (charMapRepoMock *CharacterMapRepoMock) GetCharacterMap() map[string]*CharacterModel {
 	return characterMap
 }
 
@@ -21,15 +20,15 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		characterMap = make(map[string]*models.CharacterModel)
+		characterMap = make(map[string]*CharacterModel)
 
-		characterMap["spider-man"] = &models.CharacterModel{
+		characterMap["spider-man"] = &CharacterModel{
 			Id:    1,
 			Name:  "spider-man",
 			Image: "http://i.annihil.us/u/prod/marvel/bar.jpg",
 		}
 
-		characterMap["hulk"] = &models.CharacterModel{
+		characterMap["hulk"] = &CharacterModel{
 			Id:    2,
 			Name:  "hulk",
 			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
@@ -37,8 +36,8 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 		characterListService = &CharacterListServiceImpl{
 			CharacterMapRepoInterface: &CharacterMapRepoMock{},
-			characterList: &models.CharacterListModel{
-				Characters: make([]*models.CharacterModel, 0),
+			characterList: &CharacterListModel{
+				Characters: make([]*CharacterModel, 0),
 			},
 		}
 

@@ -1,8 +1,7 @@
-package repos
+package characters
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/trwalker/marvel-go/models"
 	"testing"
 )
 
@@ -12,7 +11,7 @@ func TestCharacterMapRepoSpec(t *testing.T) {
 
 	Convey("CharacterMapRepo Tests", t, func() {
 
-		characterMapRepo = &CharacterMapRepoImpl{characterMap: make(map[string]*models.CharacterModel)}
+		characterMapRepo = &CharacterMapRepoImpl{characterMap: make(map[string]*CharacterModel)}
 
 		Convey("GetCharacterMap Function", func() {
 

@@ -1,4 +1,4 @@
-package repos
+package auth
 
 import (
 	. "github.com/smartystreets/goconvey/convey"

@@ -1,24 +1,22 @@
-package services
+package characters
 
 import (
-	"github.com/trwalker/marvel-go/models"
-	"github.com/trwalker/marvel-go/repos"
 	"sync"
 )
 
 var CharacterListServiceInstance CharacterListService = &CharacterListServiceImpl{
-	CharacterMapRepoInterface: repos.CharacterMapRepoInstance,
-	characterList: &models.CharacterListModel{
-		Characters: make([]*models.CharacterModel, 0),
+	CharacterMapRepoInterface: CharacterMapRepoInstance,
+	characterList: &CharacterListModel{
+		Characters: make([]*CharacterModel, 0),
 	},
 }
 
 type CharacterListServiceImpl struct {
-	CharacterMapRepoInterface repos.CharacterMapRepo
-	characterList             *models.CharacterListModel
+	CharacterMapRepoInterface CharacterMapRepo
+	characterList             *CharacterListModel
 }
 
-func (characterListService *CharacterListServiceImpl) GetCharacterList() *models.CharacterListModel {
+func (characterListService *CharacterListServiceImpl) GetCharacterList() *CharacterListModel {
 	if len(characterListService.characterList.Characters) == 0 {
 		lock := &sync.Mutex{}
 
@@ -36,7 +34,7 @@ func (characterListService *CharacterListServiceImpl) GetCharacterList() *models
 func buildCharacterList(characterListService *CharacterListServiceImpl) {
 	characterMap := characterListService.CharacterMapRepoInterface.GetCharacterMap()
 
-	var characters []*models.CharacterModel
+	var characters []*CharacterModel
 
 	for _, value := range characterMap {
 		characters = append(characters, value)

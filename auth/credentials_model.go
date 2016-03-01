@@ -1,4 +1,4 @@
-package models
+package auth
 
 type CredentialsModel struct {
 	PublicKey string
