@@ -22,7 +22,7 @@ func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *models.ApiKeyConfigModel {
 		defer lock.Unlock()
 
 		if apiKeyRepo.apiKeyConfigModel == nil {
-			rawJson, fileErr := ioutil.ReadFile("../config/apikey_config.json")
+			rawJson, fileErr := ioutil.ReadFile("../config/api_key_config.json")
 
 			if fileErr != nil {
 				// TODO: error logging

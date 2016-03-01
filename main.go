@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/trwalker/marvel-go/config"
+	"github.com/trwalker/marvel-go/config/handlers"
 	"net/http"
 )
 
 func main() {
-	apiHandler := config.BuildApiHandler()
+	apiHandler := handlers.BuildApiHandler()
 
 	startServer(apiHandler)
 }
