@@ -15,20 +15,25 @@ type CredentialsServiceImpl struct {
 
 func (credentialsService *CredentialsServiceImpl) GenerateCredentials() *CredentialsModel {
 	apiKeyConfig := credentialsService.ApiKeyRepoInferace.GetApiKeyConfig()
-	hash := generateHash(apiKeyConfig)
+	timeStamp := getTimeStamp()
+	hash := generateHash(apiKeyConfig, timeStamp)
 
 	return &CredentialsModel{
 		PublicKey: apiKeyConfig.PublicKey,
 		Hash:      hash,
+		TimeStamp: timeStamp,
 	}
 }
 
-func generateHash(apiKeyConfig *ApiKeyConfigModel) string {
-	timestamp := strconv.FormatInt(time.Now().UnixNano()/1000000, 10)
-	key := timestamp + apiKeyConfig.PrivateKey + apiKeyConfig.PublicKey
+func generateHash(apiKeyConfig *ApiKeyConfigModel, timeStamp string) string {
+	key := []byte(timeStamp + apiKeyConfig.PrivateKey + apiKeyConfig.PublicKey)
 
 	md5Crypto := md5.New()
 	hash := hex.EncodeToString(md5Crypto.Sum(key))
 
 	return hash
+}
+
+func getTimeStamp() string {
+	return strconv.FormatInt(time.Now().UnixNano()/1000000, 10)
 }

@@ -7,28 +7,28 @@ import (
 
 var characterListService CharacterListService
 
-var characterMap map[string]*CharacterModel
+var characterMapMock map[string]*CharacterModel
 
 type CharacterMapRepoMock struct {
 }
 
 func (charMapRepoMock *CharacterMapRepoMock) GetCharacterMap() map[string]*CharacterModel {
-	return characterMap
+	return characterMapMock
 }
 
 func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		characterMap = make(map[string]*CharacterModel)
+		characterMapMock = make(map[string]*CharacterModel)
 
-		characterMap["spider-man"] = &CharacterModel{
+		characterMapMock["spider-man"] = &CharacterModel{
 			Id:    1,
 			Name:  "spider-man",
 			Image: "http://i.annihil.us/u/prod/marvel/bar.jpg",
 		}
 
-		characterMap["hulk"] = &CharacterModel{
+		characterMapMock["hulk"] = &CharacterModel{
 			Id:    2,
 			Name:  "hulk",
 			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
@@ -48,12 +48,12 @@ func TestCharacterListServiceSpec(t *testing.T) {
 				characterList := characterListService.GetCharacterList()
 
 				Convey("Should match map length", func() {
-					So(len(characterList.Characters), ShouldEqual, len(characterMap))
+					So(len(characterList.Characters), ShouldEqual, len(characterMapMock))
 				})
 
 				Convey("Should contain map characters", func() {
 					for _, listChar := range characterList.Characters {
-						_, found := characterMap[listChar.Name]
+						_, found := characterMapMock[listChar.Name]
 						So(found, ShouldBeTrue)
 					}
 
@@ -64,7 +64,7 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 				Convey("When nil characterMap", func() {
 
-					characterMap = nil
+					characterMapMock = nil
 					characterList := characterListService.GetCharacterList()
 
 					Convey("Should return empty character list", func() {

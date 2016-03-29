@@ -11,20 +11,20 @@ import (
 
 var characterListController CharacterListController
 
-var characterList *characters.CharacterListModel
+var characterListMock *characters.CharacterListModel
 
 type CharacterListServiceMock struct {
 }
 
 func (characterListService *CharacterListServiceMock) GetCharacterList() *characters.CharacterListModel {
-	return characterList
+	return characterListMock
 }
 
 func TestCharacterListControllerSpec(t *testing.T) {
 	Convey("CharacterListController Tests", t, func() {
 
-		characterList = &characters.CharacterListModel{}
-		characterList.Characters = append(characterList.Characters, &characters.CharacterModel{
+		characterListMock = &characters.CharacterListModel{}
+		characterListMock.Characters = append(characterList.Characters, &characters.CharacterModel{
 			Name:  "spider-man",
 			Id:    1234,
 			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
@@ -58,7 +58,7 @@ func TestCharacterListControllerSpec(t *testing.T) {
 
 				Convey("When characterListModel is nil", func() {
 
-					characterList = nil
+					characterListMock = nil
 					characterListController.Get(res, req)
 
 					Convey("Should return empty character list", func() {
@@ -69,7 +69,7 @@ func TestCharacterListControllerSpec(t *testing.T) {
 
 				Convey("When characterListModel is empty", func() {
 
-					characterList = &characters.CharacterListModel{}
+					characterListMock = &characters.CharacterListModel{}
 					characterListController.Get(res, req)
 					model := &characters.CharacterListModel{}
 					json.Unmarshal([]byte(res.Body.String()), model)
