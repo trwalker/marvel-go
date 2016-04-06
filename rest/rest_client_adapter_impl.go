@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 )
 
+var RestClientAdapterInstance RestClientAdapter = &RestClientAdapterImpl{}
+
 type RestClientAdapterImpl struct {
 }
 
