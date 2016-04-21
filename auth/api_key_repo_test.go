@@ -10,13 +10,13 @@ var apiKeyRepo ApiKeyRepo
 func TestApiKeyRepoSpec(t *testing.T) {
 	Convey("ApiKeyRepo Tests", t, func() {
 
-		apiKeyRepo = &ApiKeyRepoImpl{apiKeyConfigModel: nil}
+		apiKeyRepo = &ApiKeyRepoImpl{apiKeyModel: nil}
 
 		Convey("GetApiKeyConfig Function", func() {
 
 			Convey("When valid state", func() {
 
-				Convey("Should not return nil ApiKeyConfigModel", func() {
+				Convey("Should not return nil apiKeyModel", func() {
 
 					config := apiKeyRepo.GetApiKeyConfig()
 

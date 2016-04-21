@@ -25,11 +25,12 @@ func (credentialsService *CredentialsServiceImpl) GenerateCredentials() *Credent
 	}
 }
 
-func generateHash(apiKeyConfig *ApiKeyConfigModel, timeStamp string) string {
+func generateHash(apiKeyConfig *ApiKeyModel, timeStamp string) string {
 	key := []byte(timeStamp + apiKeyConfig.PrivateKey + apiKeyConfig.PublicKey)
 
 	md5Crypto := md5.New()
-	hash := hex.EncodeToString(md5Crypto.Sum(key))
+	md5Crypto.Write(key)
+	hash := hex.EncodeToString(md5Crypto.Sum(nil))
 
 	return hash
 }

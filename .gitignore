@@ -24,4 +24,4 @@ _testmain.go
 *.prof
 
 # API Keys
-api_key_config.json
+key_config.go

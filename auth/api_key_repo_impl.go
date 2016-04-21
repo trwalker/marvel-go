@@ -1,42 +1,31 @@
 package auth
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"sync"
+	"github.com/trwalker/marvel-go/config/key"
 )
 
 var ApiKeyRepoInstance ApiKeyRepo = &ApiKeyRepoImpl{}
 
 type ApiKeyRepoImpl struct {
-	apiKeyConfigModel *ApiKeyConfigModel
+	apiKeyModel *ApiKeyModel
 }
 
-func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *ApiKeyConfigModel {
+func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *ApiKeyModel {
 
-	if apiKeyRepo.apiKeyConfigModel == nil {
+	if apiKeyRepo.apiKeyModel == nil {
 		lock := &sync.Mutex{}
 
 		lock.Lock()
 		defer lock.Unlock()
 
-		if apiKeyRepo.apiKeyConfigModel == nil {
-			rawJson, fileErr := ioutil.ReadFile("../config/auth/api_key_config.json")
-
-			if fileErr != nil {
-				// TODO: error logging
-			} else {
-				var model ApiKeyConfigModel
-				jsonErr := json.Unmarshal(rawJson, &model)
-
-				if jsonErr != nil {
-					// TODO: error logging
-				} else {
-					apiKeyRepo.apiKeyConfigModel = &model
-				}
+		if apiKeyRepo.apiKeyModel == nil {
+			apiKeyRepo.apiKeyModel = &ApiKeyModel{
+				PublicKey: key.PublicKey,
+				PrivateKey: key.PrivateKey,
 			}
 		}
 	}
 
-	return apiKeyRepo.apiKeyConfigModel
+	return apiKeyRepo.apiKeyModel
 }

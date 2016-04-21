@@ -1,5 +1,5 @@
 package characters
 
 type CharacterDetailsService interface {
-	GetCharacter(name string) *CharacterDetailsModel
+	GetCharacter(name string) (characterDetails *CharacterDetailsModel, found bool, err error)
 }

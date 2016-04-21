@@ -7,19 +7,19 @@ import (
 
 var credentialsService CredentialsService
 
-var apiKeyConfigMock *ApiKeyConfigModel
+var apiKeyConfigMock *ApiKeyModel
 
 type ApiKeyRepoMock struct {
 }
 
-func (apiKeyRepo *ApiKeyRepoMock) GetApiKeyConfig() *ApiKeyConfigModel {
+func (apiKeyRepo *ApiKeyRepoMock) GetApiKeyConfig() *ApiKeyModel {
 	return apiKeyConfigMock
 }
 
 func TestCredentialsServiceSpec(t *testing.T) {
 	Convey("CredentialsService Tests", t, func() {
 
-		apiKeyConfigMock = &ApiKeyConfigModel{PrivateKey: "foo", PublicKey: "bar"}
+		apiKeyConfigMock = &ApiKeyModel{PrivateKey: "foo", PublicKey: "bar"}
 
 		credentialsService = &CredentialsServiceImpl{ApiKeyRepoInferace: &ApiKeyRepoMock{}}
 
