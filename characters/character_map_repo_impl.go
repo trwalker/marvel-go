@@ -4,18 +4,20 @@ import (
 	"sync"
 )
 
-var CharacterMapRepoInstance CharacterMapRepo = &CharacterMapRepoImpl{characterMap: make(map[string]*CharacterModel)}
+var CharacterMapRepoInstance CharacterMapRepo = &CharacterMapRepoImpl{
+	characterMap: make(map[string]*CharacterModel),
+	lock: &sync.Mutex{},
+}
 
 type CharacterMapRepoImpl struct {
 	characterMap map[string]*CharacterModel
+	lock *sync.Mutex
 }
 
 func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]*CharacterModel {
 	if len(characterMapRepo.characterMap) == 0 {
-		lock := &sync.Mutex{}
-
-		lock.Lock()
-		defer lock.Unlock()
+		characterMapRepo.lock.Lock()
+		defer characterMapRepo.lock.Unlock()
 
 		if len(characterMapRepo.characterMap) == 0 {
 			buildCharacterMap(characterMapRepo)
