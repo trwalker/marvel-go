@@ -6,6 +6,8 @@ import (
 
 var CharacterListServiceInstance CharacterListService = &CharacterListServiceImpl{
 	CharacterMapRepoInterface: CharacterMapRepoInstance,
+	CharacterServiceInterface: CharacterServiceInstance,
+
 	characterList: &CharacterListModel{
 		Characters: make([]*CharacterModel, 0),
 	},
@@ -13,6 +15,7 @@ var CharacterListServiceInstance CharacterListService = &CharacterListServiceImp
 
 type CharacterListServiceImpl struct {
 	CharacterMapRepoInterface CharacterMapRepo
+	CharacterServiceInterface CharacterService
 	characterList             *CharacterListModel
 }
 
@@ -36,8 +39,12 @@ func buildCharacterList(characterListService *CharacterListServiceImpl) {
 
 	var characters []*CharacterModel
 
-	for _, value := range characterMap {
-		characters = append(characters, value)
+	for name, _ := range characterMap {
+		character, found, err := characterListService.CharacterServiceInterface.GetCharacter(name)
+
+		if found && err == nil {
+			characters = append(characters, character)
+		}
 	}
 
 	characterListService.characterList.Characters = characters

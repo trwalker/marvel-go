@@ -4,11 +4,11 @@ import ()
 
 var CharacterRepoInstance CharacterRepo = &CharacterRepoImpl{}
 
-var characterDetailsMap map[int]CharacterDetailsModel = make(map[int]CharacterDetailsModel)
+var characterMap map[int]CharacterModel = make(map[int]CharacterModel)
 
 type CharacterRepoImpl struct {
 }
 
-func (characterRepo *CharacterRepoImpl) GetCharacter(id int) *CharacterDetailsModel {
+func (characterRepo *CharacterRepoImpl) GetCharacter(id int) *CharacterModel {
 	return nil
 }

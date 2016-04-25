@@ -8,11 +8,11 @@ import (
 )
 
 var CharacterControllerInstance CharacterController = &CharacterControllerImpl{
-	CharacterDetailsServiceInterface: characters.CharacterDetailsServiceInstance,
+	CharacterServiceInterface: characters.CharacterServiceInstance,
 }
 
 type CharacterControllerImpl struct {
-	CharacterDetailsServiceInterface characters.CharacterDetailsService
+	CharacterServiceInterface characters.CharacterService
 }
 
 func (controller *CharacterControllerImpl) Get(res http.ResponseWriter, req *http.Request) {
@@ -20,13 +20,13 @@ func (controller *CharacterControllerImpl) Get(res http.ResponseWriter, req *htt
 
 	characterName := routeVars["characterName"]
 
-	characterDetailsModel, found, err := controller.CharacterDetailsServiceInterface.GetCharacter(characterName)
+	characterModel, found, err := controller.CharacterServiceInterface.GetCharacter(characterName)
 
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 	} else if !found {
 		res.WriteHeader(http.StatusNotFound)
 	} else {
-		json.NewEncoder(res).Encode(characterDetailsModel)
+		json.NewEncoder(res).Encode(characterModel)
 	}
 }
