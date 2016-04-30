@@ -1,27 +1,28 @@
 package auth
 
 import (
-	"sync"
 	"github.com/trwalker/marvel-go/config/key"
+	"sync"
 )
 
-var ApiKeyRepoInstance ApiKeyRepo = &ApiKeyRepoImpl{}
+var ApiKeyRepoInstance ApiKeyRepo = &ApiKeyRepoImpl{
+	lock: &sync.Mutex{},
+}
 
 type ApiKeyRepoImpl struct {
 	apiKeyModel *ApiKeyModel
+	lock        *sync.Mutex
 }
 
 func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *ApiKeyModel {
 
 	if apiKeyRepo.apiKeyModel == nil {
-		lock := &sync.Mutex{}
-
-		lock.Lock()
-		defer lock.Unlock()
+		apiKeyRepo.lock.Lock()
+		defer apiKeyRepo.lock.Unlock()
 
 		if apiKeyRepo.apiKeyModel == nil {
 			apiKeyRepo.apiKeyModel = &ApiKeyModel{
-				PublicKey: key.PublicKey,
+				PublicKey:  key.PublicKey,
 				PrivateKey: key.PrivateKey,
 			}
 		}
