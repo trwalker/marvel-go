@@ -7,35 +7,28 @@ import (
 
 var characterListService CharacterListService
 
-var characterMapMock map[string]*CharacterModel
-
-type CharacterMapRepoMock struct {
-}
-
-func (charMapRepoMock *CharacterMapRepoMock) GetCharacterMap() map[string]*CharacterModel {
-	return characterMapMock
-}
-
 func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		characterMapMock = make(map[string]*CharacterModel)
-
-		characterMapMock["spider-man"] = &CharacterModel{
-			Id:    1,
-			Name:  "spider-man",
-			Image: "http://i.annihil.us/u/prod/marvel/bar.jpg",
+		characterMock := &CharacterModel{
+			Id:          1,
+			Name:        "spider-man",
+			Description: "amazing spider man",
+			Image:       "https://cdn.com/spidey.jpg",
 		}
 
-		characterMapMock["hulk"] = &CharacterModel{
-			Id:    2,
-			Name:  "hulk",
-			Image: "http://i.annihil.us/u/prod/marvel/foo.jpg",
-		}
+		CharacterServiceMockInstance.GetCharacterMockSetup(characterMock, true, nil)
+
+		characterMapMock := make(map[string]int)
+		characterMapMock["spider-man"] = 1
+		characterMapMock["hulk"] = 2
+
+		CharacterMapRepoMockInstance.GetCharacterMapMockSetup(characterMapMock)
 
 		characterListService = &CharacterListServiceImpl{
-			CharacterMapRepoInterface: &CharacterMapRepoMock{},
+			CharacterServiceInterface: CharacterServiceMockInstance,
+			CharacterMapRepoInterface: CharacterMapRepoMockInstance,
 			characterList: &CharacterListModel{
 				Characters: make([]*CharacterModel, 0),
 			},
@@ -64,7 +57,7 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 				Convey("When nil characterMap", func() {
 
-					characterMapMock = nil
+					CharacterMapRepoMockInstance.GetCharacterMapMockSetup(nil)
 					characterList := characterListService.GetCharacterList()
 
 					Convey("Should return empty character list", func() {

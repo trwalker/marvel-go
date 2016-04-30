@@ -3,7 +3,6 @@ package characters
 import (
 	"github.com/trwalker/marvel-go/auth"
 	"github.com/trwalker/marvel-go/rest"
-	"sync"
 	"time"
 )
 
@@ -25,7 +24,6 @@ type CharacterServiceImpl struct {
 	CredentialsServiceInterface auth.CredentialsService
 	RestClientAdapterInterface  rest.RestClientAdapter
 	characterCache              map[int]*CharacterModel
-	lock                        *sync.RWMutex
 }
 
 func (characterService *CharacterServiceImpl) GetCharacter(name string) (character *CharacterModel, found bool, err error) {

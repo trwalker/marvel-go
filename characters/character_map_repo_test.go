@@ -2,16 +2,18 @@ package characters
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
+	"sync"
 	"testing"
 )
-
-var characterMapRepo CharacterMapRepo
 
 func TestCharacterMapRepoSpec(t *testing.T) {
 
 	Convey("CharacterMapRepo Tests", t, func() {
 
-		characterMapRepo = &CharacterMapRepoImpl{characterMap: make(map[string]*CharacterModel)}
+		characterMapRepo := &CharacterMapRepoImpl{
+			characterMap: make(map[string]int),
+			lock:         &sync.Mutex{},
+		}
 
 		Convey("GetCharacterMap Function", func() {
 

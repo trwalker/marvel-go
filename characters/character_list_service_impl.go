@@ -19,6 +19,12 @@ type CharacterListServiceImpl struct {
 	characterList             *CharacterListModel
 }
 
+type characterGetResult struct {
+	Character *CharacterModel
+	Found     bool
+	Err       error
+}
+
 func (characterListService *CharacterListServiceImpl) GetCharacterList() *CharacterListModel {
 	if len(characterListService.characterList.Characters) == 0 {
 		lock := &sync.Mutex{}
@@ -37,15 +43,40 @@ func (characterListService *CharacterListServiceImpl) GetCharacterList() *Charac
 func buildCharacterList(characterListService *CharacterListServiceImpl) {
 	characterMap := characterListService.CharacterMapRepoInterface.GetCharacterMap()
 
-	var characters []*CharacterModel
+	characters := getCharacters(characterListService, characterMap)
+
+	characterListService.characterList.Characters = characters
+}
+
+func getCharacters(characterListService *CharacterListServiceImpl, characterMap map[string]int) []*CharacterModel {
+	characterGetChannel := make(chan *characterGetResult)
+	defer close(characterGetChannel)
 
 	for name, _ := range characterMap {
-		character, found, err := characterListService.CharacterServiceInterface.GetCharacter(name)
+		go getCharacter(characterListService, name, characterGetChannel)
+	}
 
-		if found && err == nil {
-			characters = append(characters, character)
+	var characters []*CharacterModel
+
+	for i := 0; i < len(characterMap); i++ {
+		result := <-characterGetChannel
+
+		if result.Found && result.Err == nil {
+			characters = append(characters, result.Character)
 		}
 	}
 
-	characterListService.characterList.Characters = characters
+	return characters
+}
+
+func getCharacter(characterListService *CharacterListServiceImpl, name string, characterGetChannel chan *characterGetResult) {
+	character, found, err := characterListService.CharacterServiceInterface.GetCharacter(name)
+
+	result := &characterGetResult{
+		Character: character,
+		Found:     found,
+		Err:       err,
+	}
+
+	characterGetChannel <- result
 }
