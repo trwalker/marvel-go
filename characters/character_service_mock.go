@@ -8,6 +8,17 @@ type CharacterServiceMock struct {
 	err       error
 }
 
+func (characterServiceMock *CharacterServiceMock) ResetMock() {
+	characterServiceMock.character = &CharacterModel{
+	 	Id:          1,
+		Name:        "spider-man",
+		Description: "amazing spider man",
+		Image:       "https://cdn.com/spidey.jpg",
+	}
+	characterServiceMock.found = true
+	characterServiceMock.err = nil
+}
+
 func (characterServiceMock *CharacterServiceMock) GetCharacterMockSetup(characterMock *CharacterModel, foundMock bool, errMock error) {
 	characterServiceMock.character = characterMock
 	characterServiceMock.found = foundMock

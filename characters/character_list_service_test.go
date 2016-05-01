@@ -3,32 +3,20 @@ package characters
 import (
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+	"sync"
 )
-
-var characterListService CharacterListService
 
 func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		characterMock := &CharacterModel{
-			Id:          1,
-			Name:        "spider-man",
-			Description: "amazing spider man",
-			Image:       "https://cdn.com/spidey.jpg",
-		}
+		CharacterServiceMockInstance.ResetMock()
+		CharacterMapRepoMockInstance.ResetMock()
 
-		CharacterServiceMockInstance.GetCharacterMockSetup(characterMock, true, nil)
-
-		characterMapMock := make(map[string]int)
-		characterMapMock["spider-man"] = 1
-		characterMapMock["hulk"] = 2
-
-		CharacterMapRepoMockInstance.GetCharacterMapMockSetup(characterMapMock)
-
-		characterListService = &CharacterListServiceImpl{
+		var characterListService CharacterListService = &CharacterListServiceImpl{
 			CharacterServiceInterface: CharacterServiceMockInstance,
 			CharacterMapRepoInterface: CharacterMapRepoMockInstance,
+			lock: &sync.Mutex{},
 			characterList: &CharacterListModel{
 				Characters: make([]*CharacterModel, 0),
 			},
@@ -41,13 +29,14 @@ func TestCharacterListServiceSpec(t *testing.T) {
 				characterList := characterListService.GetCharacterList()
 
 				Convey("Should match map length", func() {
-					So(len(characterList.Characters), ShouldEqual, len(characterMapMock))
+					So(len(characterList.Characters), ShouldEqual, len(CharacterMapRepoMockInstance.characterMap))
 				})
 
 				Convey("Should contain map characters", func() {
 					for _, listChar := range characterList.Characters {
-						_, found := characterMapMock[listChar.Name]
-						So(found, ShouldBeTrue)
+						charId := CharacterMapRepoMockInstance.characterMap[listChar.Name]
+						
+						So(listChar.Id, ShouldEqual, charId)
 					}
 
 				})
