@@ -1,20 +1,21 @@
-package characters
+package charrepos
 
 import (
+	"github.com/trwalker/marvel-go/characters/models"
 	"sync"
 )
 
 var CharacterCacheRepoInstance CharacterCacheRepo = &CharacterCacheRepoImpl{
-	cache: make(map[int]*CharacterModel),
+	cache: make(map[int]*charmodels.CharacterModel),
 	lock:  &sync.RWMutex{},
 }
 
 type CharacterCacheRepoImpl struct {
-	cache map[int]*CharacterModel
+	cache map[int]*charmodels.CharacterModel
 	lock  *sync.RWMutex
 }
 
-func (characterCacheRepo *CharacterCacheRepoImpl) Get(id int) (character *CharacterModel, found bool) {
+func (characterCacheRepo *CharacterCacheRepoImpl) Get(id int) (character *charmodels.CharacterModel, found bool) {
 	characterCacheRepo.lock.RLock()
 	defer characterCacheRepo.lock.RUnlock()
 
@@ -23,7 +24,7 @@ func (characterCacheRepo *CharacterCacheRepoImpl) Get(id int) (character *Charac
 	return
 }
 
-func (characterCacheRepo *CharacterCacheRepoImpl) Add(character *CharacterModel) {
+func (characterCacheRepo *CharacterCacheRepoImpl) Add(character *charmodels.CharacterModel) {
 	if character != nil {
 		characterCacheRepo.lock.Lock()
 		defer characterCacheRepo.lock.Unlock()

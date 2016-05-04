@@ -1,4 +1,4 @@
-package characters
+package charrepos
 
 import (
 	. "github.com/smartystreets/goconvey/convey"

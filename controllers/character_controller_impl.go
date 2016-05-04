@@ -3,16 +3,16 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/trwalker/marvel-go/characters"
+	"github.com/trwalker/marvel-go/characters/services"
 	"net/http"
 )
 
 var CharacterControllerInstance CharacterController = &CharacterControllerImpl{
-	CharacterServiceInterface: characters.CharacterServiceInstance,
+	CharacterServiceInterface: charservices.CharacterServiceInstance,
 }
 
 type CharacterControllerImpl struct {
-	CharacterServiceInterface characters.CharacterService
+	CharacterServiceInterface charservices.CharacterService
 }
 
 func (controller *CharacterControllerImpl) Get(res http.ResponseWriter, req *http.Request) {

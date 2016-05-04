@@ -2,16 +2,16 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/trwalker/marvel-go/characters"
+	"github.com/trwalker/marvel-go/characters/services"
 	"net/http"
 )
 
 var CharacterListControllerInstance CharacterListController = &CharacterListControllerImpl{
-	CharacterListServiceInterface: characters.CharacterListServiceInstance,
+	CharacterListServiceInterface: charservices.CharacterListServiceInstance,
 }
 
 type CharacterListControllerImpl struct {
-	CharacterListServiceInterface characters.CharacterListService
+	CharacterListServiceInterface charservices.CharacterListService
 }
 
 func (controller *CharacterListControllerImpl) Get(res http.ResponseWriter, req *http.Request) {

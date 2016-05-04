@@ -1,32 +1,29 @@
-package characters
+package charservices
 
 import (
 	"github.com/trwalker/marvel-go/auth"
+	"github.com/trwalker/marvel-go/characters/models"
+	"github.com/trwalker/marvel-go/characters/repos"
 	"github.com/trwalker/marvel-go/rest"
-	"time"
 )
 
-const getCharacterUrlFormat string = "http://gateway.marvel.com/v1/public/characters/%d?ts=%s&apikey=%s&hash=%s"
-const timeout time.Duration = time.Millisecond * 4000
-
 var CharacterServiceInstance CharacterService = &CharacterServiceImpl{
-	CharacterMapRepoInterface:   CharacterMapRepoInstance,
-	CharacterRepoInterface:      CharacterRepoInstance,
-	CharacterCacheRepoInterface: CharacterCacheRepoInstance,
+	CharacterMapRepoInterface:   charrepos.CharacterMapRepoInstance,
+	CharacterRepoInterface:      charrepos.CharacterRepoInstance,
+	CharacterCacheRepoInterface: charrepos.CharacterCacheRepoInstance,
 	CredentialsServiceInterface: auth.CredentialsServiceInstance,
 	RestClientAdapterInterface:  rest.RestClientAdapterInstance,
 }
 
 type CharacterServiceImpl struct {
-	CharacterMapRepoInterface   CharacterMapRepo
-	CharacterRepoInterface      CharacterRepo
-	CharacterCacheRepoInterface CharacterCacheRepo
+	CharacterMapRepoInterface   charrepos.CharacterMapRepo
+	CharacterRepoInterface      charrepos.CharacterRepo
+	CharacterCacheRepoInterface charrepos.CharacterCacheRepo
 	CredentialsServiceInterface auth.CredentialsService
 	RestClientAdapterInterface  rest.RestClientAdapter
-	characterCache              map[int]*CharacterModel
 }
 
-func (characterService *CharacterServiceImpl) GetCharacter(name string) (character *CharacterModel, found bool, err error) {
+func (characterService *CharacterServiceImpl) GetCharacter(name string) (character *charmodels.CharacterModel, found bool, err error) {
 	character = nil
 	found = false
 	err = nil

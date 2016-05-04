@@ -1,32 +1,34 @@
-package characters
+package charservices
 
 import (
+	"github.com/trwalker/marvel-go/characters/models"
+	"github.com/trwalker/marvel-go/characters/repos"
 	"sync"
 )
 
 var CharacterListServiceInstance CharacterListService = &CharacterListServiceImpl{
-	CharacterMapRepoInterface: CharacterMapRepoInstance,
+	CharacterMapRepoInterface: charrepos.CharacterMapRepoInstance,
 	CharacterServiceInterface: CharacterServiceInstance,
 	lock: &sync.Mutex{},
-	characterList: &CharacterListModel{
-		Characters: make([]*CharacterModel, 0),
+	characterList: &charmodels.CharacterListModel{
+		Characters: make([]*charmodels.CharacterModel, 0),
 	},
 }
 
 type CharacterListServiceImpl struct {
-	CharacterMapRepoInterface CharacterMapRepo
+	CharacterMapRepoInterface charrepos.CharacterMapRepo
 	CharacterServiceInterface CharacterService
 	lock                      *sync.Mutex
-	characterList             *CharacterListModel
+	characterList             *charmodels.CharacterListModel
 }
 
 type characterGetResult struct {
-	Character *CharacterModel
+	Character *charmodels.CharacterModel
 	Found     bool
 	Err       error
 }
 
-func (characterListService *CharacterListServiceImpl) GetCharacterList() *CharacterListModel {
+func (characterListService *CharacterListServiceImpl) GetCharacterList() *charmodels.CharacterListModel {
 	if len(characterListService.characterList.Characters) == 0 {
 		characterListService.lock.Lock()
 		defer characterListService.lock.Unlock()
@@ -47,7 +49,7 @@ func buildCharacterList(characterListService *CharacterListServiceImpl) {
 	characterListService.characterList.Characters = characters
 }
 
-func getCharacters(characterListService *CharacterListServiceImpl, characterMap map[string]int) []*CharacterModel {
+func getCharacters(characterListService *CharacterListServiceImpl, characterMap map[string]int) []*charmodels.CharacterModel {
 	characterGetChannel := make(chan *characterGetResult)
 	defer close(characterGetChannel)
 
@@ -55,7 +57,7 @@ func getCharacters(characterListService *CharacterListServiceImpl, characterMap 
 		go getCharacter(characterListService, name, characterGetChannel)
 	}
 
-	var characters []*CharacterModel
+	var characters []*charmodels.CharacterModel
 
 	for i := 0; i < len(characterMap); i++ {
 		result := <-characterGetChannel

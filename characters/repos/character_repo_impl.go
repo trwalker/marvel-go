@@ -1,13 +1,18 @@
-package characters
+package charrepos
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/trwalker/marvel-go/auth"
+	"github.com/trwalker/marvel-go/characters/models"
 	"github.com/trwalker/marvel-go/rest"
 	"net/http"
+	"time"
 )
+
+const getCharacterUrlFormat string = "http://gateway.marvel.com/v1/public/characters/%d?ts=%s&apikey=%s&hash=%s"
+const getCharactertimeout time.Duration = time.Millisecond * 4000
 
 var CharacterRepoInstance CharacterRepo = &CharacterRepoImpl{
 	RestClientAdapterInterface: rest.RestClientAdapterInstance,
@@ -17,16 +22,16 @@ type CharacterRepoImpl struct {
 	RestClientAdapterInterface rest.RestClientAdapter
 }
 
-func (characterRepo *CharacterRepoImpl) GetCharacter(characterId int, credentials *auth.CredentialsModel) (character *CharacterModel, found bool, err error) {
+func (characterRepo *CharacterRepoImpl) GetCharacter(characterId int, credentials *auth.CredentialsModel) (character *charmodels.CharacterModel, found bool, err error) {
 	character, found, err = getCharacterFromMarvelApi(characterRepo, characterId, credentials)
 
 	return
 }
 
-func getCharacterFromMarvelApi(characterRepo *CharacterRepoImpl, characterId int, credentials *auth.CredentialsModel) (character *CharacterModel, found bool, err error) {
+func getCharacterFromMarvelApi(characterRepo *CharacterRepoImpl, characterId int, credentials *auth.CredentialsModel) (character *charmodels.CharacterModel, found bool, err error) {
 	requestUrl := fmt.Sprintf(getCharacterUrlFormat, characterId, credentials.TimeStamp, credentials.PublicKey, credentials.Hash)
 
-	resp, body, restErr := characterRepo.RestClientAdapterInterface.Get(requestUrl, timeout)
+	resp, body, restErr := characterRepo.RestClientAdapterInterface.Get(requestUrl, getCharactertimeout)
 
 	if restErr != nil {
 		err = restErr
@@ -45,7 +50,7 @@ func getCharacterFromMarvelApi(characterRepo *CharacterRepoImpl, characterId int
 	return
 }
 
-func parseCharacterJson(body string, resp *http.Response) (character *CharacterModel, found bool, err error) {
+func parseCharacterJson(body string, resp *http.Response) (character *charmodels.CharacterModel, found bool, err error) {
 	character = nil
 	found = true
 
@@ -74,7 +79,7 @@ func parseCharacterJson(body string, resp *http.Response) (character *CharacterM
 				comics[i] = comicName
 			}
 
-			character = &CharacterModel{
+			character = &charmodels.CharacterModel{
 				Id:          int(characterResult["id"].(float64)),
 				Name:        characterResult["name"].(string),
 				Description: characterResult["description"].(string),

@@ -1,4 +1,4 @@
-package characters
+package charmodels
 
 type CharacterModel struct {
 	Id          int      `json:"id"`
