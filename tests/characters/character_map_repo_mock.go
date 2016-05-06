@@ -1,4 +1,4 @@
-package charrepos
+package characterstests
 
 var CharacterMapRepoMockInstance *CharacterMapRepoMock = &CharacterMapRepoMock{}
 

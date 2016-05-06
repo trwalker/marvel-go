@@ -1,20 +1,26 @@
-package charrepos
+package characters
 
 import (
 	"sync"
 )
 
-var CharacterMapRepoInstance CharacterMapRepo = &CharacterMapRepoImpl{
-	characterMap: make(map[string]int),
-	lock:         &sync.Mutex{},
-}
+var CharacterMapRepoInstance CharacterMapRepo = NewCharacterMapRepo()
 
-type CharacterMapRepoImpl struct {
+type characterMapRepoImpl struct {
 	characterMap map[string]int
 	lock         *sync.Mutex
 }
 
-func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]int {
+func NewCharacterMapRepo() CharacterMapRepo {
+	characterMapRepo := &characterMapRepoImpl{
+		characterMap: make(map[string]int),
+		lock:         &sync.Mutex{},
+	}
+
+	return characterMapRepo
+}
+
+func (characterMapRepo *characterMapRepoImpl) GetCharacterMap() map[string]int {
 	if len(characterMapRepo.characterMap) == 0 {
 		characterMapRepo.lock.Lock()
 		defer characterMapRepo.lock.Unlock()
@@ -27,7 +33,7 @@ func (characterMapRepo *CharacterMapRepoImpl) GetCharacterMap() map[string]int {
 	return characterMapRepo.characterMap
 }
 
-func buildCharacterMap(characterMapRepo *CharacterMapRepoImpl) {
+func buildCharacterMap(characterMapRepo *characterMapRepoImpl) {
 	characterMapRepo.characterMap["spider-man"] = 1009610
 	characterMapRepo.characterMap["hulk"] = 1009351
 	characterMapRepo.characterMap["captain-america"] = 1009220

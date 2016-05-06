@@ -3,24 +3,30 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/trwalker/marvel-go/characters/services"
+	"github.com/trwalker/marvel-go/characters"
 	"net/http"
 )
 
-var CharacterControllerInstance CharacterController = &CharacterControllerImpl{
-	CharacterServiceInterface: charservices.CharacterServiceInstance,
+var CharacterControllerInstance CharacterController = NewCharacterController(characters.CharacterServiceInstance)
+
+type characterControllerImpl struct {
+	characterServiceInterface characters.CharacterService
 }
 
-type CharacterControllerImpl struct {
-	CharacterServiceInterface charservices.CharacterService
+func NewCharacterController(characterService characters.CharacterService) CharacterController {
+	characterController := &characterControllerImpl{
+		characterServiceInterface: characterService,
+	}
+
+	return characterController
 }
 
-func (controller *CharacterControllerImpl) Get(res http.ResponseWriter, req *http.Request) {
+func (controller *characterControllerImpl) Get(res http.ResponseWriter, req *http.Request) {
 	routeVars := mux.Vars(req)
 
 	characterName := routeVars["characterName"]
 
-	characterModel, found, err := controller.CharacterServiceInterface.GetCharacter(characterName)
+	characterModel, found, err := controller.characterServiceInterface.GetCharacter(characterName)
 
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)

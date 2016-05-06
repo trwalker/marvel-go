@@ -1,9 +1,8 @@
-package charservices
+package characterstests
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/trwalker/marvel-go/characters/models"
-	"sync"
+	"github.com/trwalker/marvel-go/characters"
 	"testing"
 )
 
@@ -11,15 +10,15 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 	Convey("CharacterListService Tests", t, func() {
 
-		characters := make(map[string]*charmodels.CharacterModel)
-		characters["spider-man"] = &charmodels.CharacterModel{
+		characterMap := make(map[string]*characters.CharacterModel)
+		characterMap["spider-man"] = &characters.CharacterModel{
 			Id:          1,
 			Name:        "spider-man",
 			Description: "amazing spider man",
 			Image:       "https://cdn.com/spidey.jpg",
 		}
 
-		characters["hulk"] = &charmodels.CharacterModel{
+		characterMap["hulk"] = &characters.CharacterModel{
 			Id:          2,
 			Name:        "hulk",
 			Description: "don't make me angry",
@@ -28,30 +27,26 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 		var getCharacterError error = nil
 
-		CharacterServiceMockInstance.GetCharacterMock = func(name string) (character *charmodels.CharacterModel, found bool, err error) {
-			character, found = characters[name]
+		CharacterServiceMockInstance.GetCharacterMock = func(name string) (character *characters.CharacterModel, found bool, err error) {
+			character, found = characterMap[name]
 			err = getCharacterError
 
 			return
 		}
 
 		CharacterMapRepoMockInstance.GetCharacterMapMock = func() map[string]int {
-			characterMap := make(map[string]int)
+			characterIdMap := make(map[string]int)
 
-			for name, character := range characters {
-				characterMap[name] = character.Id
+			for name, character := range characterMap {
+				characterIdMap[name] = character.Id
 			}
 
-			return characterMap
+			return characterIdMap
 		}
 
-		var characterListService CharacterListService = &CharacterListServiceImpl{
+		var characterListService characters.CharacterListService = &characters.CharacterListServiceImpl{
 			CharacterServiceInterface: CharacterServiceMockInstance,
 			CharacterMapRepoInterface: CharacterMapRepoMockInstance,
-			lock: &sync.Mutex{},
-			characterList: &charmodels.CharacterListModel{
-				Characters: make([]*charmodels.CharacterModel, 0),
-			},
 		}
 
 		Convey("GetCharacterList Function", func() {

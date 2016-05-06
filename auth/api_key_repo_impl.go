@@ -5,16 +5,22 @@ import (
 	"sync"
 )
 
-var ApiKeyRepoInstance ApiKeyRepo = &ApiKeyRepoImpl{
-	lock: &sync.Mutex{},
-}
+var ApiKeyRepoInstance ApiKeyRepo = NewApiKeyRepo()
 
-type ApiKeyRepoImpl struct {
+type apiKeyRepoImpl struct {
 	apiKeyModel *ApiKeyModel
 	lock        *sync.Mutex
 }
 
-func (apiKeyRepo *ApiKeyRepoImpl) GetApiKeyConfig() *ApiKeyModel {
+func NewApiKeyRepo() ApiKeyRepo {
+	apiKeyRepo := &apiKeyRepoImpl{
+		lock: &sync.Mutex{},
+	}
+
+	return apiKeyRepo
+}
+
+func (apiKeyRepo *apiKeyRepoImpl) GetApiKeyConfig() *ApiKeyModel {
 
 	if apiKeyRepo.apiKeyModel == nil {
 		apiKeyRepo.lock.Lock()

@@ -2,20 +2,26 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/trwalker/marvel-go/characters/services"
+	"github.com/trwalker/marvel-go/characters"
 	"net/http"
 )
 
-var CharacterListControllerInstance CharacterListController = &CharacterListControllerImpl{
-	CharacterListServiceInterface: charservices.CharacterListServiceInstance,
+var CharacterListControllerInstance CharacterListController = NewCharacterListController(characters.CharacterListServiceInstance)
+
+type characterListControllerImpl struct {
+	characterListServiceInterface characters.CharacterListService
 }
 
-type CharacterListControllerImpl struct {
-	CharacterListServiceInterface charservices.CharacterListService
+func NewCharacterListController(characterListService characters.CharacterListService) CharacterListController {
+	characterListController := &characterListControllerImpl{
+		characterListServiceInterface: characters.CharacterListServiceInstance,
+	}
+
+	return characterListController
 }
 
-func (controller *CharacterListControllerImpl) Get(res http.ResponseWriter, req *http.Request) {
-	characterListModel := controller.CharacterListServiceInterface.GetCharacterList()
+func (controller *characterListControllerImpl) Get(res http.ResponseWriter, req *http.Request) {
+	characterListModel := controller.characterListServiceInterface.GetCharacterList()
 
 	if characterListModel != nil {
 		json.NewEncoder(res).Encode(characterListModel)

@@ -7,14 +7,20 @@ import (
 	"time"
 )
 
-var CredentialsServiceInstance CredentialsService = &CredentialsServiceImpl{ApiKeyRepoInferace: ApiKeyRepoInstance}
+var CredentialsServiceInstance CredentialsService = NewCredentialsService(ApiKeyRepoInstance)
 
-type CredentialsServiceImpl struct {
-	ApiKeyRepoInferace ApiKeyRepo
+type credentialsServiceImpl struct {
+	apiKeyRepoInferace ApiKeyRepo
 }
 
-func (credentialsService *CredentialsServiceImpl) GenerateCredentials() *CredentialsModel {
-	apiKeyConfig := credentialsService.ApiKeyRepoInferace.GetApiKeyConfig()
+func NewCredentialsService(apiKeyRepo ApiKeyRepo) CredentialsService {
+	credentialsService := &credentialsServiceImpl{apiKeyRepoInferace: apiKeyRepo}
+
+	return credentialsService
+}
+
+func (credentialsService *credentialsServiceImpl) GenerateCredentials() *CredentialsModel {
+	apiKeyConfig := credentialsService.apiKeyRepoInferace.GetApiKeyConfig()
 	timeStamp := getTimeStamp()
 	hash := generateHash(apiKeyConfig, timeStamp)
 

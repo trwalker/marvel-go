@@ -1,17 +1,23 @@
 package rest
 
 import (
+	"io/ioutil"
 	"net/http"
 	"time"
-	"io/ioutil"
 )
 
-var RestClientAdapterInstance RestClientAdapter = &RestClientAdapterImpl{}
+var RestClientAdapterInstance RestClientAdapter = &restClientAdapterImpl{}
 
-type RestClientAdapterImpl struct {
+type restClientAdapterImpl struct {
 }
 
-func (restClientAdapter *RestClientAdapterImpl) Get(url string, timeout time.Duration) (resp *http.Response, body string, err error) {
+func NewRestClientAdapter() RestClientAdapter {
+	restClientAdapter := &restClientAdapterImpl{}
+
+	return restClientAdapter
+}
+
+func (restClientAdapter *restClientAdapterImpl) Get(url string, timeout time.Duration) (resp *http.Response, body string, err error) {
 	resp = nil
 	body = ""
 	err = nil
@@ -26,9 +32,9 @@ func (restClientAdapter *RestClientAdapterImpl) Get(url string, timeout time.Dur
 	}
 
 	resp, err = sendRequest(client, req)
-	
+
 	if err != nil {
-		return	
+		return
 	}
 
 	body, err = readBody(resp)

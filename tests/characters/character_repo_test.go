@@ -1,17 +1,18 @@
-package charrepos
+package characterstests
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/trwalker/marvel-go/characters"
 	"testing"
 )
 
-var characterRepo CharacterRepo
+var characterRepo characters.CharacterRepo
 
 func TestCharacterRepoSpec(t *testing.T) {
 
 	Convey("CharacterRepo Tests", t, func() {
 
-		characterRepo = &CharacterRepoImpl{}
+		characterRepo = &characters.CharacterRepoImpl{}
 
 		Convey("GetCharacter Function", func() {
 

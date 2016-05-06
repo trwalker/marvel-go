@@ -1,37 +1,42 @@
-package charrepos
+package characters
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/trwalker/marvel-go/auth"
-	"github.com/trwalker/marvel-go/characters/models"
 	"github.com/trwalker/marvel-go/rest"
 	"net/http"
 	"time"
 )
 
+var CharacterRepoInstance CharacterRepo = NewCharacterRepo(rest.RestClientAdapterInstance)
+
 const getCharacterUrlFormat string = "http://gateway.marvel.com/v1/public/characters/%d?ts=%s&apikey=%s&hash=%s"
 const getCharactertimeout time.Duration = time.Millisecond * 4000
 
-var CharacterRepoInstance CharacterRepo = &CharacterRepoImpl{
-	RestClientAdapterInterface: rest.RestClientAdapterInstance,
+type characterRepoImpl struct {
+	restClientAdapterInterface rest.RestClientAdapter
 }
 
-type CharacterRepoImpl struct {
-	RestClientAdapterInterface rest.RestClientAdapter
+func NewCharacterRepo(restClientAdapter rest.RestClientAdapter) CharacterRepo {
+	characterRepo := &characterRepoImpl{
+		restClientAdapterInterface: rest.RestClientAdapterInstance,
+	}
+
+	return characterRepo
 }
 
-func (characterRepo *CharacterRepoImpl) GetCharacter(characterId int, credentials *auth.CredentialsModel) (character *charmodels.CharacterModel, found bool, err error) {
+func (characterRepo *characterRepoImpl) GetCharacter(characterId int, credentials *auth.CredentialsModel) (character *CharacterModel, found bool, err error) {
 	character, found, err = getCharacterFromMarvelApi(characterRepo, characterId, credentials)
 
 	return
 }
 
-func getCharacterFromMarvelApi(characterRepo *CharacterRepoImpl, characterId int, credentials *auth.CredentialsModel) (character *charmodels.CharacterModel, found bool, err error) {
+func getCharacterFromMarvelApi(characterRepo *characterRepoImpl, characterId int, credentials *auth.CredentialsModel) (character *CharacterModel, found bool, err error) {
 	requestUrl := fmt.Sprintf(getCharacterUrlFormat, characterId, credentials.TimeStamp, credentials.PublicKey, credentials.Hash)
 
-	resp, body, restErr := characterRepo.RestClientAdapterInterface.Get(requestUrl, getCharactertimeout)
+	resp, body, restErr := characterRepo.restClientAdapterInterface.Get(requestUrl, getCharactertimeout)
 
 	if restErr != nil {
 		err = restErr
@@ -50,7 +55,7 @@ func getCharacterFromMarvelApi(characterRepo *CharacterRepoImpl, characterId int
 	return
 }
 
-func parseCharacterJson(body string, resp *http.Response) (character *charmodels.CharacterModel, found bool, err error) {
+func parseCharacterJson(body string, resp *http.Response) (character *CharacterModel, found bool, err error) {
 	character = nil
 	found = true
 
@@ -79,7 +84,7 @@ func parseCharacterJson(body string, resp *http.Response) (character *charmodels
 				comics[i] = comicName
 			}
 
-			character = &charmodels.CharacterModel{
+			character = &CharacterModel{
 				Id:          int(characterResult["id"].(float64)),
 				Name:        characterResult["name"].(string),
 				Description: characterResult["description"].(string),
