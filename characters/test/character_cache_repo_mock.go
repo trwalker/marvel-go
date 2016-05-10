@@ -1,10 +1,8 @@
-package characterstests
+package characterstest
 
 import (
 	"github.com/trwalker/marvel-go/characters"
 )
-
-var CharacterCacheRepoMockInstance *CharacterCacheRepoMock = &CharacterCacheRepoMock{}
 
 type CharacterCacheRepoMock struct {
 	GetMock func(id int) (character *characters.CharacterModel, found bool)

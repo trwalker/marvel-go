@@ -1,4 +1,4 @@
-package characterstests
+package characterstest
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
@@ -10,7 +10,7 @@ func TestCharacterMapRepoSpec(t *testing.T) {
 
 	Convey("CharacterMapRepo Tests", t, func() {
 
-		characterMapRepo := &characters.CharacterMapRepoImpl{}
+		characterMapRepo := characters.NewCharacterMapRepo()
 
 		Convey("GetCharacterMap Function", func() {
 

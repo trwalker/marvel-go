@@ -1,6 +1,4 @@
-package characterstests
-
-var CharacterMapRepoMockInstance *CharacterMapRepoMock = &CharacterMapRepoMock{}
+package characterstest
 
 type CharacterMapRepoMock struct {
 	GetCharacterMapMock func() map[string]int

@@ -4,11 +4,11 @@ import (
 	"sync"
 )
 
-var CharacterListServiceInstance CharacterListService = NewCharacterListService(CharacterMapRepoInstance, CharacterServiceInstance)
+var CharacterListServiceInstance CharacterListService = NewCharacterListService(CharacterServiceInstance, CharacterMapRepoInstance)
 
 type characterListServiceImpl struct {
-	characterMapRepoInterface CharacterMapRepo
 	characterServiceInterface CharacterService
+	characterMapRepoInterface CharacterMapRepo
 	characterList             *CharacterListModel
 	lock                      *sync.Mutex
 }
@@ -19,10 +19,10 @@ type characterGetResult struct {
 	Err       error
 }
 
-func NewCharacterListService(characterMapRepo CharacterMapRepo, characterService CharacterService) CharacterListService {
+func NewCharacterListService(characterService CharacterService, characterMapRepo CharacterMapRepo) CharacterListService {
 	characterListService := &characterListServiceImpl{
-		characterMapRepoInterface: characterMapRepo,
 		characterServiceInterface: characterService,
+		characterMapRepoInterface: characterMapRepo,
 		characterList:             &CharacterListModel{Characters: make([]*CharacterModel, 0)},
 		lock:                      &sync.Mutex{},
 	}

@@ -1,4 +1,4 @@
-package characterstests
+package characterstest
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
@@ -27,14 +27,16 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 		var getCharacterError error = nil
 
-		CharacterServiceMockInstance.GetCharacterMock = func(name string) (character *characters.CharacterModel, found bool, err error) {
+		characterServiceMock := &CharacterServiceMock{}
+		characterServiceMock.GetCharacterMock = func(name string) (character *characters.CharacterModel, found bool, err error) {
 			character, found = characterMap[name]
 			err = getCharacterError
 
 			return
 		}
 
-		CharacterMapRepoMockInstance.GetCharacterMapMock = func() map[string]int {
+		characterMapRepoMock := &CharacterMapRepoMock{}
+		characterMapRepoMock.GetCharacterMapMock = func() map[string]int {
 			characterIdMap := make(map[string]int)
 
 			for name, character := range characterMap {
@@ -44,10 +46,7 @@ func TestCharacterListServiceSpec(t *testing.T) {
 			return characterIdMap
 		}
 
-		var characterListService characters.CharacterListService = &characters.CharacterListServiceImpl{
-			CharacterServiceInterface: CharacterServiceMockInstance,
-			CharacterMapRepoInterface: CharacterMapRepoMockInstance,
-		}
+		characterListService := characters.NewCharacterListService(characterServiceMock, characterMapRepoMock)
 
 		Convey("GetCharacterList Function", func() {
 
@@ -64,7 +63,7 @@ func TestCharacterListServiceSpec(t *testing.T) {
 
 				Convey("When nil characterMap", func() {
 
-					CharacterMapRepoMockInstance.GetCharacterMapMock = func() map[string]int {
+					characterMapRepoMock.GetCharacterMapMock = func() map[string]int {
 						return nil
 					}
 

@@ -1,10 +1,8 @@
-package characterstests
+package characterstest
 
 import (
 	"github.com/trwalker/marvel-go/characters"
 )
-
-var CharacterListServiceMockInstance *CharacterListServiceMock = &CharacterListServiceMock{}
 
 type CharacterListServiceMock struct {
 	GetCharacterListMock func() *characters.CharacterListModel
