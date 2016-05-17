@@ -1,4 +1,4 @@
-package auth
+package authmock
 
 // import (
 // 	. "github.com/smartystreets/goconvey/convey"

@@ -1,27 +1,20 @@
-package auth
+package authmock
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/trwalker/marvel-go/auth"
 	"testing"
 )
-
-var credentialsService CredentialsService
-
-var apiKeyConfigMock *ApiKeyModel
-
-type ApiKeyRepoMock struct {
-}
-
-func (apiKeyRepo *ApiKeyRepoMock) GetApiKeyConfig() *ApiKeyModel {
-	return apiKeyConfigMock
-}
 
 func TestCredentialsServiceSpec(t *testing.T) {
 	Convey("CredentialsService Tests", t, func() {
 
-		apiKeyConfigMock = &ApiKeyModel{PrivateKey: "foo", PublicKey: "bar"}
+		apiKeyRepoMock := &ApiKeyRepoMock{}
+		apiKeyRepoMock.GetApiKeyConfigMock = func() *auth.ApiKeyModel {
+			return &auth.ApiKeyModel{PrivateKey: "foo", PublicKey: "bar"}
+		}
 
-		credentialsService = &CredentialsServiceImpl{ApiKeyRepoInferace: &ApiKeyRepoMock{}}
+		credentialsService := auth.NewCredentialsService(apiKeyRepoMock)
 
 		Convey("GenerateCredentials Function", func() {
 
@@ -45,14 +38,13 @@ func TestCredentialsServiceSpec(t *testing.T) {
 
 					credentialsModel := credentialsService.GenerateCredentials()
 
-					So(credentialsModel.Hash, ShouldEqual, "bar")
+					So(len(credentialsModel.Hash), ShouldBeGreaterThan, 0)
 				})
 
 				Convey("Should not return empty TimeStamp", func() {
-
 					credentialsModel := credentialsService.GenerateCredentials()
 
-					So(credentialsModel.TimeStamp, ShouldEqual, "bar")
+					So(len(credentialsModel.TimeStamp), ShouldBeGreaterThan, 0)
 				})
 
 			})

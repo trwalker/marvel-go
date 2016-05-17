@@ -21,7 +21,7 @@ type characterRepoImpl struct {
 
 func NewCharacterRepo(restClientAdapter rest.RestClientAdapter) CharacterRepo {
 	characterRepo := &characterRepoImpl{
-		restClientAdapterInterface: rest.RestClientAdapterInstance,
+		restClientAdapterInterface: restClientAdapter,
 	}
 
 	return characterRepo
