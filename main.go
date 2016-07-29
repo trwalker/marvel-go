@@ -14,7 +14,7 @@ func main() {
 
 func startServer(apiHandler http.Handler) {
 	fmt.Println("Starting Web Server...")
-	fmt.Println("URL:", "http://127.0.0.1:9000/")
+	fmt.Println("URL:", "http://0.0.0.0:9000/")
 
-	http.ListenAndServe("127.0.0.1:9000", apiHandler)
+	http.ListenAndServe("0.0.0.0:9000", apiHandler)
 }

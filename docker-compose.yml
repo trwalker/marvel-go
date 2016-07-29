@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+    marvel-api:
+        container_name: marvel-api
+        build:
+            context: .
+            dockerfile: .docker/go-docker.dockerfile
+        ports:
+            - "9000:9000"
+        networks:
+            - marvel-network
+
+networks:
+    marvel-network:
+        driver: bridge
