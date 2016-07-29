@@ -8,8 +8,7 @@ COPY . ${GOPATH}/src/github.com/trwalker/marvel-go/
 
 WORKDIR ${GOPATH}/src/github.com/trwalker/marvel-go/
 
-RUN ["go", "get", "github.com/gorilla/mux"]
-RUN ["go", "get", "github.com/gorilla/handlers"]
+RUN ["go", "get", "./..."]
 
 RUN ["go", "install"]
 
