@@ -10,7 +10,7 @@ func RegisterMiddleware(apiRouter *mux.Router) http.Handler {
 	var apiHandler http.Handler = apiRouter
 
 	apiHandler = handlers.CompressHandler(apiHandler)
-	apiHandler = handlers.CORS(handlers.AllowedOrigins([]string{"http://google.com"}))(apiHandler)
+	apiHandler = handlers.CORS()(apiHandler)
 	apiHandler = ResponseHeaders(apiHandler)
 
 	return apiHandler

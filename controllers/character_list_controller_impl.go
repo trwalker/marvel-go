@@ -14,7 +14,7 @@ type characterListControllerImpl struct {
 
 func NewCharacterListController(characterListService characters.CharacterListService) CharacterListController {
 	characterListController := &characterListControllerImpl{
-		characterListServiceInterface: characters.CharacterListServiceInstance,
+		characterListServiceInterface: characterListService,
 	}
 
 	return characterListController
