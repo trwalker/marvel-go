@@ -1,5 +1,5 @@
 package characters
 
 type CharacterListService interface {
-	GetCharacterList() *CharacterListModel
+	GetCharacterList(filter string) *CharacterListModel
 }

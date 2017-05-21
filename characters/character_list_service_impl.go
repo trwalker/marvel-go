@@ -2,6 +2,7 @@ package characters
 
 import (
 	"sync"
+	"strings"
 )
 
 var CharacterListServiceInstance CharacterListService = NewCharacterListService(CharacterServiceInstance, CharacterMapRepoInstance)
@@ -30,7 +31,7 @@ func NewCharacterListService(characterService CharacterService, characterMapRepo
 	return characterListService
 }
 
-func (characterListService *characterListServiceImpl) GetCharacterList() *CharacterListModel {
+func (characterListService *characterListServiceImpl) GetCharacterList(filter string) *CharacterListModel {
 	if len(characterListService.characterList.Characters) == 0 {
 		characterListService.lock.Lock()
 		defer characterListService.lock.Unlock()
@@ -40,7 +41,7 @@ func (characterListService *characterListServiceImpl) GetCharacterList() *Charac
 		}
 	}
 
-	return characterListService.characterList
+	return getFilteredCharacterList(characterListService.characterList, filter)
 }
 
 func buildCharacterList(characterListService *characterListServiceImpl) {
@@ -55,7 +56,7 @@ func getCharacters(characterListService *characterListServiceImpl, characterMap 
 	characterGetChannel := make(chan *characterGetResult)
 	defer close(characterGetChannel)
 
-	for name, _ := range characterMap {
+	for name := range characterMap {
 		go getCharacter(characterListService, name, characterGetChannel)
 	}
 
@@ -82,4 +83,22 @@ func getCharacter(characterListService *characterListServiceImpl, name string, c
 	}
 
 	characterGetChannel <- result
+}
+
+func getFilteredCharacterList(characterList *CharacterListModel, filter string) *CharacterListModel {
+	if filter == "" {
+		return characterList
+	} else {
+		filteredCharacterList := &CharacterListModel{Characters: make([]*CharacterModel, 0)}
+
+		filterLower := strings.ToLower(filter)
+
+		for _, character := range characterList.Characters {
+			if strings.Contains(strings.ToLower(character.Name), filterLower) {
+				filteredCharacterList.Characters = append(filteredCharacterList.Characters, character)
+			}
+		}
+
+		return filteredCharacterList
+	}
 }

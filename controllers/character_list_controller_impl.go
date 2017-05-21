@@ -21,7 +21,16 @@ func NewCharacterListController(characterListService characters.CharacterListSer
 }
 
 func (controller *characterListControllerImpl) Get(res http.ResponseWriter, req *http.Request) {
-	characterListModel := controller.characterListServiceInterface.GetCharacterList()
+	var filter string
+
+	filterQuery := req.URL.Query()["filter"]
+	if len(filterQuery) == 0 {
+		filter = ""
+	} else {
+		filter = filterQuery[0]
+	}
+
+	characterListModel := controller.characterListServiceInterface.GetCharacterList(filter)
 
 	if characterListModel != nil {
 		json.NewEncoder(res).Encode(characterListModel)
